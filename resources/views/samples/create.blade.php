@@ -9,20 +9,22 @@
     @csrf
     <input type="hidden" name="material_id" value="{{ $material->id }}">
 
-    <div class="grid grid-2" style="margin-bottom: 2rem;">
+    <div class="grid grid-2 mb-8">
         <!-- Informasi Sampel -->
         <div class="card">
-            <h3 class="section-title" style="font-size: 1.125rem;">Informasi Sampel</h3>
+            <h3 class="section-title text-xl">Informasi Sampel</h3>
             
             <div class="form-group">
                 <label class="form-label">Jenis Material</label>
-                <input type="text" class="form-control" value="{{ $material->name }}" disabled>
+                <input type="text" class="form-control bg-muted" value="{{ $material->name }}" disabled>
             </div>
 
             <div class="form-group">
                 <label class="form-label">No. Sampel *</label>
                 <input type="text" name="sample_no" class="form-control" placeholder="Contoh: LAB-2026-001" required value="{{ old('sample_no') }}">
-                @error('sample_no') <p style="color: var(--danger); font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
+                @error('sample_no') 
+                    <p class="error-message">{{ $message }}</p> 
+                @enderror
             </div>
 
             <div class="form-group">
@@ -38,43 +40,25 @@
 
         <!-- Parameter Hasil Uji -->
         <div class="card">
-            <h3 class="section-title" style="font-size: 1.125rem;">Parameter Kimia Hasil Uji Lab</h3>
-            <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 1.5rem;">Isi parameter sesuai hasil uji laboratorium (SNI 0449:2010)</p>
+            <h3 class="section-title text-xl">Parameter Hasil Uji</h3>
+            <p class="text-muted text-sm mb-8">Isi parameter sesuai hasil uji laboratorium (Standar SNI 0449:2010)</p>
 
             <div class="grid grid-2">
+                @foreach(['fe2o3' => 'Fe₂O₃', 'cao' => 'CaO', 'sio2' => 'SiO₂', 'al2o3' => 'Al₂O₃', 'caco3' => 'CaCO₃', 'loi' => 'LoI'] as $key => $label)
                 <div class="form-group">
-                    <label class="form-label">Fe₂O₃ (%)</label>
-                    <input type="number" step="0.0001" name="fe2o3" class="form-control" placeholder="0,00" value="{{ old('fe2o3') }}">
+                    <label class="form-label">{{ $label }} (%)</label>
+                    <input type="number" step="0.0001" name="{{ $key }}" class="form-control" placeholder="0.0000" value="{{ old($key) }}">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">CaO (%)</label>
-                    <input type="number" step="0.0001" name="cao" class="form-control" placeholder="0,00" value="{{ old('cao') }}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">SiO₂ (%)</label>
-                    <input type="number" step="0.0001" name="sio2" class="form-control" placeholder="0,00" value="{{ old('sio2') }}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Al₂O₃ (%)</label>
-                    <input type="number" step="0.0001" name="al2o3" class="form-control" placeholder="0,00" value="{{ old('al2o3') }}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">CaCO₃ (%)</label>
-                    <input type="number" step="0.0001" name="caco3" class="form-control" placeholder="0,00" value="{{ old('caco3') }}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">LoI (%)</label>
-                    <input type="number" step="0.0001" name="loi" class="form-control" placeholder="0,00" value="{{ old('loi') }}">
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 
-    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-        <a href="{{ route('dashboard') }}" class="btn btn-outline" style="min-width: 120px;">Batal</a>
-        <button type="submit" class="btn btn-primary" style="min-width: 200px;">
-            Proses Klasifikasi
-            <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+    <div class="d-flex flex-gap-4 justify-end">
+        <a href="{{ route('dashboard') }}" class="btn btn-outline min-w-140">Batal</a>
+        <button type="submit" class="btn btn-primary min-w-220">
+            <span>Proses Klasifikasi</span>
+            <i data-lucide="arrow-right"></i>
         </button>
     </div>
 </form>

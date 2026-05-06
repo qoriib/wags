@@ -5,12 +5,12 @@
 @section('header_subtitle', 'Kelola parameter dan ambang batas untuk klasifikasi kualitas material')
 
 @section('content')
-<div class="card" style="margin-bottom: 2.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 class="section-title" style="font-size: 1.125rem; margin-bottom: 0;">BASIS ATURAN FORWARD CHAINING</h3>
-        <button class="btn btn-outline" style="border-color: var(--primary); color: var(--primary);" onclick="resetForm()">
-            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
-            Tambah Aturan
+<div class="card mb-8">
+    <div class="flex-between mb-8">
+        <h3 class="section-title text-xl mb-0">BASIS ATURAN FORWARD CHAINING</h3>
+        <button class="btn btn-outline primary-text" onclick="resetForm()">
+            <i data-lucide="plus"></i>
+            <span>Tambah Aturan</span>
         </button>
     </div>
 
@@ -22,14 +22,14 @@
                     <th>Parameter (Rumus)</th>
                     <th>Kondisi</th>
                     <th>Nilai Batas</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th class="align-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($rules as $rule)
                 <tr>
-                    <td style="font-weight: 600;">{{ $rule->material->name }}</td>
-                    <td><code style="background: var(--bg); padding: 0.2rem 0.5rem; border-radius: 4px;">{{ $rule->material->chemical_formula }}</code></td>
+                    <td class="font-bold">{{ $rule->material->name }}</td>
+                    <td><code class="code-badge">{{ $rule->material->chemical_formula }}</code></td>
                     <td>
                         @php
                             $opLabel = match($rule->operator) {
@@ -41,17 +41,20 @@
                         @endphp
                         {{ $opLabel }} ({{ $rule->operator }})
                     </td>
-                    <td>{{ $rule->value * 100 }}%</td>
-                    <td style="text-align: right;">
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: center;">
-                            <a href="javascript:void(0)" 
-                               onclick="editRule({{ json_encode($rule) }})"
-                               style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.875rem;">Edit</a>
+                    <td class="font-semibold">{{ $rule->value * 100 }}%</td>
+                    <td class="align-right">
+                        <div class="d-flex flex-gap-3 justify-end items-center">
+                            <button onclick="editRule({{ json_encode($rule) }})" class="btn btn-outline btn-sm">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                <span>Edit</span>
+                            </button>
                             
-                            <form action="{{ route('settings.rules.destroy', $rule->id) }}" method="POST" onsubmit="return confirm('Hapus aturan ini?')" style="display: inline;">
+                            <form action="{{ route('settings.rules.destroy', $rule->id) }}" method="POST" onsubmit="return confirm('Hapus aturan ini?')" class="inline-block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.75rem;"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
+                                <button type="submit" class="btn btn-outline btn-sm danger-outline">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
                             </form>
                         </div>
                     </td>
@@ -62,8 +65,8 @@
     </div>
 </div>
 
-<div class="card" id="form-card">
-    <h3 class="section-title" style="font-size: 1.125rem;" id="form-title">TAMBAH / EDIT ATURAN</h3>
+<div class="card scroll-mt-8" id="form-card">
+    <h3 class="section-title text-xl" id="form-title">TAMBAH ATURAN BARU</h3>
     
     <form id="rule-form" action="{{ route('settings.rules.store') }}" method="POST">
         @csrf
@@ -82,7 +85,7 @@
             
             <div class="form-group">
                 <label class="form-label">Parameter Terdeteksi</label>
-                <input type="text" id="formula-display" class="form-control" value="—" disabled style="background: #f8fafc;">
+                <input type="text" id="formula-display" class="form-control bg-muted" value="—" disabled>
             </div>
 
             <div class="form-group">
@@ -97,14 +100,14 @@
 
             <div class="form-group">
                 <label class="form-label">Nilai Batas (%)</label>
-                <input type="number" step="0.0001" name="input_value" id="input_value" class="form-control" placeholder="0,5" required oninput="updateHiddenValue()">
+                <input type="number" step="0.0001" name="input_value" id="input_value" class="form-control" placeholder="0.5" required oninput="updateHiddenValue()">
                 <input type="hidden" name="value" id="hidden_value">
             </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-            <button type="button" class="btn btn-outline" style="flex: 1; padding: 1rem; background: #f8fafc;" onclick="resetForm()">Batal</button>
-            <button type="submit" class="btn btn-primary" id="submit-btn" style="flex: 1; padding: 1rem; background: #d0e1f9; color: #1e40af;">Simpan Aturan</button>
+        <div class="d-flex flex-gap-4 mt-10">
+            <button type="button" class="btn btn-outline flex-1 p-4" onclick="resetForm()">Batal</button>
+            <button type="submit" class="btn btn-primary flex-2 p-4" id="submit-btn">Simpan Aturan</button>
         </div>
     </form>
 </div>
@@ -133,7 +136,7 @@
         title.innerText = 'EDIT ATURAN';
         form.action = `/settings/rules/${rule.id}`;
         methodField.innerHTML = '<input type="hidden" name="_method" value="PUT">';
-        submitBtn.innerText = 'Perbarui Aturan';
+        submitBtn.innerHTML = '<span>Perbarui Aturan</span>';
         
         materialSelect.value = rule.material_id;
         updateFormulaDisplay();
@@ -146,10 +149,10 @@
     }
 
     function resetForm() {
-        title.innerText = 'TAMBAH ATURAN';
+        title.innerText = 'TAMBAH ATURAN BARU';
         form.action = "{{ route('settings.rules.store') }}";
         methodField.innerHTML = '';
-        submitBtn.innerText = 'Simpan Aturan';
+        submitBtn.innerHTML = '<span>Simpan Aturan</span>';
         form.reset();
         formulaDisplay.value = '—';
     }

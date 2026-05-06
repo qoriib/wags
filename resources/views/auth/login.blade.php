@@ -10,7 +10,7 @@
     <form action="{{ route('login') }}" method="POST" class="text-left">
         @csrf
         
-        <div class="form-group mb-6">
+        <div class="form-group mb-5">
             <label class="form-label" for="email">Email</label>
             <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan email Anda" value="{{ old('email', 'admin@wags.com') }}" required autofocus>
             @error('email') 
@@ -18,7 +18,7 @@
             @enderror
         </div>
 
-        <div class="form-group mb-10">
+        <div class="form-group mb-6">
             <label class="form-label" for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" value="password123" required>
             @error('password') 

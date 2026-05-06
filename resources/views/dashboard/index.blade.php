@@ -5,27 +5,27 @@
 @section('header_subtitle', 'Ringkasan aktivitas uji kualitas material bulan ini')
 
 @section('content')
-<div class="grid grid-3" style="margin-bottom: 2.5rem;">
-    <div class="card" style="text-align: center; padding: 2rem;">
-        <p style="color: var(--text-muted); font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">Total Uji Bulan Ini</p>
-        <h3 style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">{{ $totalUji }}</h3>
+<div class="grid grid-3 mb-10">
+    <div class="card stat-card">
+        <p class="stat-label">Total Uji Bulan Ini</p>
+        <h3 class="stat-value">{{ $totalUji }}</h3>
     </div>
-    <div class="card" style="text-align: center; padding: 2rem; border-bottom: 4px solid var(--success);">
-        <p style="color: var(--text-muted); font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">Layak Kirim</p>
-        <h3 style="font-size: 2.5rem; font-weight: 700; color: var(--success);">{{ $layakKirim }}</h3>
+    <div class="card stat-card success">
+        <p class="stat-label">Layak Kirim</p>
+        <h3 class="stat-value success-text">{{ $layakKirim }}</h3>
     </div>
-    <div class="card" style="text-align: center; padding: 2rem; border-bottom: 4px solid var(--danger);">
-        <p style="color: var(--text-muted); font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">Tidak Layak</p>
-        <h3 style="font-size: 2.5rem; font-weight: 700; color: var(--danger);">{{ $tidakLayak }}</h3>
+    <div class="card stat-card danger">
+        <p class="stat-label">Tidak Layak</p>
+        <h3 class="stat-value danger-text">{{ $tidakLayak }}</h3>
     </div>
 </div>
 
-<section style="margin-bottom: 2.5rem;">
-    <h3 class="section-title" style="font-size: 1.125rem;">Mulai Klasifikasi Baru</h3>
-    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+<section class="mb-10">
+    <h3 class="section-title text-xl">Mulai Klasifikasi Baru</h3>
+    <div class="auto-grid">
         @foreach($materials as $material)
-        <div class="card" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center;">
-            <div style="width: 80px; height: 80px; background: var(--bg); border-radius: 16px; display: flex; align-items: center; justify-content: center;">
+        <div class="card material-card">
+            <div class="icon-box">
                 @php
                     $icon = match($material->slug) {
                         'kaolin' => 'mountain',
@@ -36,22 +36,22 @@
                         default => 'box'
                     };
                 @endphp
-                <i data-lucide="{{ $icon }}" style="width: 32px; height: 32px; color: var(--primary);"></i>
+                <i data-lucide="{{ $icon }}"></i>
             </div>
             <div>
-                <h4 style="font-weight: 700; margin-bottom: 0.25rem;">{{ $material->name }}</h4>
-                <p style="font-size: 0.75rem; color: var(--text-muted);">Cek Kualitas</p>
+                <h4 class="font-bold text-lg mb-2">{{ $material->name }}</h4>
+                <p class="text-xs text-muted">Uji Kualitas Material</p>
             </div>
-            <a href="{{ route('samples.create', $material->id) }}" class="btn btn-outline" style="width: 100%;">Mulai Uji</a>
+            <a href="{{ route('samples.create', $material->id) }}" class="btn btn-outline w-full">Mulai Uji</a>
         </div>
         @endforeach
     </div>
 </section>
 
 <section>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 class="section-title" style="font-size: 1.125rem; margin-bottom: 0;">Uji Terbaru</h3>
-        <a href="{{ route('samples.index') }}" style="color: var(--primary); font-size: 0.875rem; font-weight: 600; text-decoration: none;">Lihat Semua</a>
+    <div class="flex-between mb-6">
+        <h3 class="section-title text-xl m-0">Uji Terbaru</h3>
+        <a href="{{ route('samples.index') }}" class="primary-text text-sm font-semibold no-underline">Lihat Semua</a>
     </div>
     
     <div class="table-container">
@@ -62,27 +62,30 @@
                     <th>Material</th>
                     <th>No. Sampel</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th class="align-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($latestSamples as $sample)
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
-                    <td style="font-weight: 600;">{{ $sample->material->name }}</td>
-                    <td>{{ $sample->sample_no }}</td>
+                    <td class="font-bold">{{ $sample->material->name }}</td>
+                    <td><code class="code-badge">{{ $sample->sample_no }}</code></td>
                     <td>
                         <span class="badge {{ $sample->status == 'Layak Kirim' ? 'badge-success' : 'badge-danger' }}">
-                            {{ strtoupper($sample->status) }}
+                            {{ $sample->status }}
                         </span>
                     </td>
-                    <td>
-                        <a href="{{ route('samples.show', $sample->id) }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">Detail</a>
+                    <td class="align-right">
+                        <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-outline btn-sm">Detail</a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">Belum ada data uji terbaru.</td>
+                    <td colspan="5" class="text-center p-16 text-muted">
+                        <i data-lucide="inbox" class="mb-4 opacity-30 w-12 h-12"></i>
+                        <p>Belum ada data uji terbaru.</p>
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
