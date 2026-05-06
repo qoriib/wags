@@ -9,9 +9,11 @@
     @yield('styles')
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="brand">
                 <div class="brand-logo">
                     <i data-lucide="gem"></i>
@@ -23,25 +25,25 @@
                 <li>
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i data-lucide="layout-dashboard"></i>
-                        Dashboard
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('samples.create*') ? 'active' : '' }}">
                         <i data-lucide="clipboard-edit"></i>
-                        Input Data Uji
+                        <span>Input Data Uji</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('samples.index') }}" class="nav-link {{ request()->routeIs('samples.index') ? 'active' : '' }}">
                         <i data-lucide="file-text"></i>
-                        Laporan Uji
+                        <span>Laporan Uji</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('settings.index') }}" class="nav-link {{ request()->routeIs('settings.index') ? 'active' : '' }}">
                         <i data-lucide="settings"></i>
-                        Pengaturan
+                        <span>Pengaturan</span>
                     </a>
                 </li>
             </nav>
@@ -52,38 +54,49 @@
                 </form>
                 <a href="#" class="nav-link" style="color: var(--danger);" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i data-lucide="log-out"></i>
-                    Keluar
+                    <span>Keluar</span>
                 </a>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <div>
-                    <h2 style="font-size: 1.25rem; font-weight: 600;">@yield('header_title')</h2>
-                    <p style="color: var(--text-muted); font-size: 0.875rem;">@yield('header_subtitle')</p>
-                </div>
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="text-align: right;">
-                        <p style="font-weight: 600; font-size: 0.875rem;">Admin Internal</p>
-                        <p style="color: var(--text-muted); font-size: 0.75rem;">PT Wina Alam Gunung Semesta</p>
+                    <button class="header-mobile-toggle" id="sidebarToggle">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">@yield('header_title')</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9375rem; margin-top: 0.25rem;" class="hide-mobile">@yield('header_subtitle')</p>
                     </div>
-                    <div style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="user" style="width: 20px; height: 20px; color: var(--text-muted);"></i>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                    <div style="text-align: right;" class="hide-mobile">
+                        <p style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main);">Admin Internal</p>
+                        <p style="color: var(--text-muted); font-size: 0.8125rem;">PT Wina Alam Gunung Semesta</p>
+                    </div>
+                    <div style="width: 48px; height: 48px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);">
+                        <i data-lucide="user" style="width: 24px; height: 24px; color: var(--text-muted);"></i>
                     </div>
                 </div>
             </header>
 
             @if(session('success'))
-                <div class="card animate-fade-in" style="background: var(--success-light); border-color: var(--success); color: var(--success); padding: 1rem; margin-bottom: 1.5rem;">
-                    {{ session('success') }}
+                <div class="card animate-fade-in" style="background: var(--success-light); border-color: var(--success); color: var(--success); padding: 1.25rem; margin-bottom: 2rem; border-radius: var(--radius-sm);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                        <span style="font-weight: 600;">{{ session('success') }}</span>
+                    </div>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="card animate-fade-in" style="background: var(--danger-light); border-color: var(--danger); color: var(--danger); padding: 1rem; margin-bottom: 1.5rem;">
-                    {{ session('error') }}
+                <div class="card animate-fade-in" style="background: var(--danger-light); border-color: var(--danger); color: var(--danger); padding: 1.25rem; margin-bottom: 2rem; border-radius: var(--radius-sm);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+                        <span style="font-weight: 600;">{{ session('error') }}</span>
+                    </div>
                 </div>
             @endif
 
@@ -93,8 +106,26 @@
         </main>
     </div>
 
+    <style>
+        @media (max-width: 640px) {
+            .hide-mobile { display: none; }
+        }
+    </style>
+
     <script>
         lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
     </script>
     @yield('scripts')
 </body>

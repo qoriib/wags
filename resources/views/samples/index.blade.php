@@ -5,12 +5,12 @@
 @section('header_subtitle', 'Daftar keseluruhan data hasil klasifikasi laboratorium')
 
 @section('content')
-<div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+<div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
     <form action="{{ route('samples.index') }}" method="GET" id="filter-form">
-        <div style="display: flex; gap: 1.5rem; align-items: center;">
+        <div class="filter-grid" style="display: flex; gap: 1.5rem; align-items: center;">
             <div class="form-group" style="flex: 1; margin-bottom: 0;">
                 <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Jenis Material</label>
-                <select name="material_id" class="form-control" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: 8px;">
+                <select name="material_id" class="form-control" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
                     <option value="">Semua Material</option>
                     @foreach($materials as $material)
                         <option value="{{ $material->id }}" {{ request('material_id') == $material->id ? 'selected' : '' }}>{{ $material->name }}</option>
@@ -20,7 +20,7 @@
             
             <div class="form-group" style="flex: 1; margin-bottom: 0;">
                 <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Status</label>
-                <select name="status" class="form-control" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: 8px;">
+                <select name="status" class="form-control" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
                     <option value="">Semua Status</option>
                     <option value="Layak Kirim" {{ request('status') == 'Layak Kirim' ? 'selected' : '' }}>Layak Kirim</option>
                     <option value="Tidak Layak" {{ request('status') == 'Tidak Layak' ? 'selected' : '' }}>Tidak Layak</option>
@@ -29,14 +29,14 @@
 
             <div class="form-group" style="flex: 1; margin-bottom: 0;">
                 <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Bulan</label>
-                <input type="month" name="month" class="form-control" value="{{ request('month') }}" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: 8px;">
+                <input type="month" name="month" class="form-control" value="{{ request('month') }}" onchange="this.form.submit()" style="padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
             </div>
         </div>
     </form>
 </div>
 
 <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <h3 class="section-title" style="margin-bottom: 0;">REKAPITULASI HASIL UJI</h3>
         <a href="{{ route('samples.export', request()->all()) }}" class="btn btn-outline" style="border-color: #10b981; color: #10b981;">
             <i data-lucide="download" style="width: 16px; height: 16px;"></i>

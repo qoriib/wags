@@ -8,27 +8,41 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            background-color: #f1f3f1; /* Light grey background from login.png */
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            background-color: var(--bg);
         }
-        .login-card {
-            background: white;
-            padding: 3rem;
-            border-radius: 24px; /* More rounded as in login.png */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+
+        .login-container {
             width: 100%;
-            max-width: 450px;
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
+            max-width: 480px;
+            padding: 1.5rem;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        @media (max-width: 480px) { 
+            .login-card {
+                padding: 1.5rem;
+            } 
+        } 
     </style>
 </head>
 <body>
-    @yield('content')
+    <div class="login-container">
+        @yield('content')
+    </div>
     <script>
         lucide.createIcons();
     </script>
