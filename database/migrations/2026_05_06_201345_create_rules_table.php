@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('rules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('material_id')->constrained()->onDelete('cascade');
+            $table->string('parameter');
+            $table->string('operator');
+            $table->decimal('value', 10, 4);
+            $table->string('result_status');
             $table->timestamps();
         });
     }
