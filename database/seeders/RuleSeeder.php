@@ -22,38 +22,28 @@ class RuleSeeder extends Seeder
         $rules = [
             [
                 'material_id' => $kaolin->id,
-                'parameter' => 'Fe2O3',
-                'operator' => 'Kurang dari',
-                'value' => 0.5,
-                'result_status' => 'Layak Kirim',
+                'operator' => '<',
+                'value' => 0.005, // 0.5%
             ],
             [
                 'material_id' => $clayF1->id,
-                'parameter' => 'CaO',
-                'operator' => 'Lebih dari',
-                'value' => 3,
-                'result_status' => 'Layak Kirim',
+                'operator' => '>',
+                'value' => 0.03, // 3%
             ],
             [
                 'material_id' => $feldspar->id,
-                'parameter' => 'Fe2O3',
-                'operator' => 'Kurang dari',
-                'value' => 0.3,
-                'result_status' => 'Layak Kirim',
+                'operator' => '<',
+                'value' => 0.003, // 0.3%
             ],
             [
                 'material_id' => $limestone->id,
-                'parameter' => 'CaCO3',
-                'operator' => 'Lebih dari',
-                'value' => 90,
-                'result_status' => 'Layak Kirim',
+                'operator' => '>',
+                'value' => 0.9, // 90%
             ],
             [
                 'material_id' => $clayPasiran->id,
-                'parameter' => 'SiO2',
-                'operator' => 'Lebih dari',
-                'value' => 80,
-                'result_status' => 'Layak Kirim',
+                'operator' => '>',
+                'value' => 0.8, // 80%
             ],
         ];
 

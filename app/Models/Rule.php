@@ -9,10 +9,8 @@ class Rule extends Model
 {
     protected $fillable = [
         'material_id',
-        'parameter',
         'operator',
         'value',
-        'result_status',
     ];
 
     /**

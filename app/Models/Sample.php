@@ -12,14 +12,16 @@ class Sample extends Model
         'sample_no',
         'test_date',
         'operator',
-        'fe2o3',
-        'cao',
-        'sio2',
-        'al2o3',
-        'caco3',
-        'loi',
         'status',
     ];
+
+    /**
+     * Get the details for the sample.
+     */
+    public function details()
+    {
+        return $this->hasMany(SampleDetail::class);
+    }
 
     /**
      * Get the material that owns the sample.

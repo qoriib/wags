@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('samples', function (Blueprint $table) {
+        Schema::create('sample_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sample_id')->constrained()->onDelete('cascade');
             $table->foreignId('material_id')->constrained()->onDelete('cascade');
-            $table->string('sample_no')->unique();
-            $table->date('test_date');
-            $table->string('operator');
-            $table->string('status');
+            $table->decimal('value', 12, 6);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('samples');
+        Schema::dropIfExists('sample_details');
     }
 };

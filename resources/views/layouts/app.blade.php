@@ -27,7 +27,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link {{ request()->routeIs('samples.create*') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('samples.create*') ? 'active' : '' }}">
                         <i data-lucide="clipboard-edit"></i>
                         Input Data Uji
                     </a>
@@ -47,7 +47,10 @@
             </nav>
 
             <div style="margin-top: auto; padding-top: 2rem;">
-                <a href="#" class="nav-link" style="color: var(--danger);">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+                <a href="#" class="nav-link" style="color: var(--danger);" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i data-lucide="log-out"></i>
                     Keluar
                 </a>

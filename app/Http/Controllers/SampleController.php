@@ -65,40 +65,60 @@ class SampleController extends Controller
         $material = Material::findOrFail($request->material_id);
         $rules = Rule::where('material_id', $material->id)->get();
 
-        // Forward Chaining Logic
-        // Start with "Layak Kirim", and if any rule fails, set to "Tidak Layak"
-        // This assumes rules define the criteria for being "Layak Kirim"
-        $status = 'Layak Kirim';
-        $failedRules = [];
+        // Prepare parameter values (convert percentages to 0-1 decimals)
+        $rawParams = ['fe2o3', 'cao', 'sio2', 'al2o3', 'caco3', 'loi'];
+        $processedParams = [];
+        foreach ($rawParams as $p) {
+            if ($request->has($p) && $request->input($p) !== null) {
+                $processedParams[$p] = $request->input($p) / 100;
+            }
+        }
 
+        // Forward Chaining Logic
+        $status = 'Layak Kirim';
         foreach ($rules as $rule) {
-            $paramValue = $request->input(strtolower(str_replace(' ', '', $rule->parameter)));
+            $paramKey = strtolower($material->chemical_formula);
+            $paramValue = $processedParams[$paramKey] ?? null;
             
             if ($paramValue === null) continue;
 
             $passed = false;
             switch ($rule->operator) {
-                case 'Kurang dari':
-                    $passed = $paramValue < $rule->value;
-                    break;
-                case 'Lebih dari':
-                    $passed = $paramValue > $rule->value;
-                    break;
-                case 'Kurang dari sama dengan':
-                    $passed = $paramValue <= $rule->value;
-                    break;
-                case 'Lebih dari sama dengan':
-                    $passed = $paramValue >= $rule->value;
-                    break;
+                case '<':  $passed = $paramValue < $rule->value; break;
+                case '>':  $passed = $paramValue > $rule->value; break;
+                case '<=': $passed = $paramValue <= $rule->value; break;
+                case '>=': $passed = $paramValue >= $rule->value; break;
             }
 
             if (!$passed) {
                 $status = 'Tidak Layak';
-                $failedRules[] = $rule;
+                break;
             }
         }
 
-        $sample = Sample::create(array_merge($request->all(), ['status' => $status]));
+        // Save Sample Metadata
+        $sample = Sample::create([
+            'material_id' => $material->id,
+            'sample_no' => $request->sample_no,
+            'test_date' => $request->test_date,
+            'operator' => $request->operator,
+            'status' => $status,
+        ]);
+
+        // Save Sample Details
+        foreach ($processedParams as $param => $value) {
+            // Find the material record for this chemical compound
+            $paramMaterial = Material::where('slug', strtolower($param))
+                                    ->orWhere('name', $param)
+                                    ->first();
+            
+            if ($paramMaterial) {
+                $sample->details()->create([
+                    'material_id' => $paramMaterial->id,
+                    'value' => $value,
+                ]);
+            }
+        }
 
         return redirect()->route('samples.show', $sample)
             ->with('status', 'Klasifikasi berhasil dilakukan.');

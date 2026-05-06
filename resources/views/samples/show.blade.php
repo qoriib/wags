@@ -45,45 +45,40 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $params = [
-                        ['label' => 'Fe₂O₃', 'val' => $sample->fe2o3, 'key' => 'Fe2O3'],
-                        ['label' => 'CaO', 'val' => $sample->cao, 'key' => 'CaO'],
-                        ['label' => 'SiO₂', 'val' => $sample->sio2, 'key' => 'SiO2'],
-                        ['label' => 'Al₂O₃', 'val' => $sample->al2o3, 'key' => 'Al2O3'],
-                        ['label' => 'CaCO₃', 'val' => $sample->caco3, 'key' => 'CaCO3'],
-                        ['label' => 'LoI', 'val' => $sample->loi, 'key' => 'LoI'],
-                    ];
-                @endphp
-
-                @foreach($params as $param)
-                    @if($param['val'] !== null)
-                        @php
-                            $rule = $sample->material->rules->where('parameter', $param['key'])->first();
-                            $status = 'Memenuhi';
-                            $standard = '—';
-                            
-                            if ($rule) {
-                                $standard = $rule->operator . ' ' . $rule->value . '%';
-                                $passed = match($rule->operator) {
-                                    'Kurang dari' => $param['val'] < $rule->value,
-                                    'Lebih dari' => $param['val'] > $rule->value,
-                                    default => true
-                                };
-                                $status = $passed ? 'Memenuhi' : 'Tidak Memenuhi';
-                            }
-                        @endphp
-                        <tr>
-                            <td style="font-weight: 600;">{{ $param['label'] }}</td>
-                            <td>{{ number_format($param['val'], 2) }}%</td>
-                            <td>{{ $standard }}</td>
-                            <td>
-                                <span class="badge {{ $status == 'Memenuhi' ? 'badge-success' : 'badge-danger' }}" style="font-size: 0.7rem;">
-                                    {{ $status }}
-                                </span>
-                            </td>
-                        </tr>
-                    @endif
+                @foreach($sample->details as $detail)
+                    @php
+                        $isTarget = strtolower($sample->material->chemical_formula) == strtolower($detail->material->name) 
+                                 || strtolower($sample->material->chemical_formula) == strtolower($detail->material->slug);
+                        
+                        $rule = $sample->material->rules->first();
+                        $status = 'Informasi';
+                        $standard = '—';
+                        
+                        if ($isTarget && $rule) {
+                            $standard = $rule->operator . ' ' . ($rule->value * 100) . '%';
+                            $passed = match($rule->operator) {
+                                '<' => $detail->value < $rule->value,
+                                '>' => $detail->value > $rule->value,
+                                '<=' => $detail->value <= $rule->value,
+                                '>=' => $detail->value >= $rule->value,
+                                default => true
+                            };
+                            $status = $passed ? 'Memenuhi' : 'Tidak Memenuhi';
+                        }
+                    @endphp
+                    <tr>
+                        <td style="font-weight: 600;">
+                            {{ $detail->material->name }}
+                            @if($isTarget) <span style="font-size: 0.6rem; background: var(--primary-light); color: var(--primary); padding: 2px 4px; border-radius: 4px; margin-left: 4px;">TARGET</span> @endif
+                        </td>
+                        <td>{{ number_format($detail->value * 100, 2) }}%</td>
+                        <td>{{ $standard }}</td>
+                        <td>
+                            <span class="badge {{ $status == 'Memenuhi' ? 'badge-success' : ($status == 'Tidak Memenuhi' ? 'badge-danger' : 'badge-outline') }}" style="font-size: 0.7rem;">
+                                {{ $status }}
+                            </span>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -95,7 +90,7 @@
     <div style="background: white; border-radius: 8px; padding: 1.5rem; border: 1px solid var(--border); font-family: 'Courier New', Courier, monospace; font-size: 0.875rem; color: var(--primary);">
         <p>IF material = <strong>{{ $sample->material->name }}</strong></p>
         @foreach($sample->material->rules as $rule)
-            <p>AND {{ $rule->parameter }} {{ $rule->operator }} {{ $rule->value }}%</p>
+            <p>AND {{ $sample->material->chemical_formula }} {{ $rule->operator }} {{ $rule->value * 100 }}%</p>
         @endforeach
         <p>THEN status = <strong>Layak Kirim</strong></p>
     </div>

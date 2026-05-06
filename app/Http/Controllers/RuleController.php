@@ -26,10 +26,8 @@ class RuleController extends Controller
     {
         $request->validate([
             'material_id' => 'required|exists:materials,id',
-            'parameter' => 'required|string',
-            'operator' => 'required|string',
+            'operator' => 'required|in:<,>,<=,>=',
             'value' => 'required|numeric',
-            'result_status' => 'required|string',
         ]);
 
         Rule::create($request->all());
@@ -44,10 +42,8 @@ class RuleController extends Controller
     {
         $request->validate([
             'material_id' => 'required|exists:materials,id',
-            'parameter' => 'required|string',
-            'operator' => 'required|string',
+            'operator' => 'required|in:<,>,<=,>=',
             'value' => 'required|numeric',
-            'result_status' => 'required|string',
         ]);
 
         $rule->update($request->all());
