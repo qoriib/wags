@@ -132,4 +132,61 @@ class SampleController extends Controller
         $sample->load('material.rules');
         return view('samples.show', compact('sample'));
     }
+
+    /**
+     * Export samples to CSV.
+     */
+    public function exportCsv(Request $request)
+    {
+        $query = Sample::with(['material', 'details.material']);
+
+        if ($request->filled('material_id')) {
+            $query->where('material_id', $request->material_id);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('month')) {
+            $query->whereMonth('test_date', Carbon::parse($request->month)->month)
+                  ->whereYear('test_date', Carbon::parse($request->month)->year);
+        }
+
+        $samples = $query->latest()->get();
+        
+        $filename = "Laporan_Uji_" . now()->format('Ymd_His') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['No', 'Tanggal', 'Material', 'No. Sampel', 'Operator', 'Fe2O3', 'CaO', 'Status'];
+
+        $callback = function() use($samples, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($samples as $index => $sample) {
+                $fe2o3Detail = $sample->details->where('material.slug', 'fe2o3')->first();
+                $caoDetail = $sample->details->where('material.slug', 'cao')->first();
+                
+                fputcsv($file, [
+                    $index + 1,
+                    $sample->test_date,
+                    $sample->material->name,
+                    $sample->sample_no,
+                    $sample->operator,
+                    $fe2o3Detail ? ($fe2o3Detail->value * 100) . '%' : '-',
+                    $caoDetail ? ($caoDetail->value * 100) . '%' : '-',
+                    $sample->status,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
