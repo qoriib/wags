@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SampleController;
-use App\Http\Controllers\RuleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RuleController;
+use App\Http\Controllers\SampleController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Routes
@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('samples')->name('samples.')->group(function () {
         Route::get('/', [SampleController::class, 'index'])->name('index');
         Route::get('/export', [SampleController::class, 'exportCsv'])->name('export');
-        Route::get('/create/{material}', [SampleController::class, 'create'])->name('create');
+        Route::get('/create', [SampleController::class, 'create'])->name('create');
         Route::post('/', [SampleController::class, 'store'])->name('store');
         Route::get('/{sample}', [SampleController::class, 'show'])->name('show');
     });

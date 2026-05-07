@@ -10,13 +10,12 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
             <h3 class="section-title mb-0">BASIS ATURAN FORWARD CHAINING</h3>
             <button class="btn btn-outline-primary fw-semibold" onclick="resetForm()">
-                <span>+ Tambah Aturan</span>
+                <span>Tambah Aturan</span>
             </button>
         </div>
 
-        <div class="table-container">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th class="ps-4">Material</th>
@@ -60,7 +59,6 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
         </div>
     </div>
 </div>

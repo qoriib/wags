@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('samples.create*') ? 'active' : '' }}">
+                    <a href="{{ route('samples.create') }}" class="nav-link {{ request()->routeIs('samples.create*') ? 'active' : '' }}">
                         <i data-lucide="clipboard-edit"></i>
                         <span>Input Data Uji</span>
                     </a>
@@ -61,43 +61,45 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <header class="app-header d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="header-mobile-toggle" id="sidebarToggle">
-                        <i data-lucide="menu"></i>
-                    </button>
-                </div>
-                <div class="d-flex align-items-center gap-3">
-                    <div class="text-end d-none d-lg-block">
-                        <p class="user-title">Admin Internal</p>
-                        <p class="user-subtitle">PT Wina Alam Gunung Semesta</p>
+            <div class="main-inner">
+                <header class="app-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="header-mobile-toggle" id="sidebarToggle">
+                            <i data-lucide="menu"></i>
+                        </button>
                     </div>
-                    <div class="user-avatar">
-                        <i data-lucide="user" class="user-avatar-icon"></i>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-end d-none d-lg-block">
+                            <p class="user-title">Admin Internal</p>
+                            <p class="user-subtitle">PT Wina Alam Gunung Semesta</p>
+                        </div>
+                        <div class="user-avatar">
+                            <i data-lucide="user" class="user-avatar-icon"></i>
+                        </div>
                     </div>
-                </div>
-            </header>
+                </header>
 
-            @if(session('success'))
-                <div class="card animate-fade-in alert-card alert-card-success">
-                    <div class="alert-card-body">
-                        <i data-lucide="check-circle" class="alert-card-icon"></i>
-                        <span class="alert-card-text">{{ session('success') }}</span>
+                @if(session('success'))
+                    <div class="card animate-fade-in alert-card alert-card-success">
+                        <div class="alert-card-body">
+                            <i data-lucide="check-circle" class="alert-card-icon"></i>
+                            <span class="alert-card-text">{{ session('success') }}</span>
+                        </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            @if(session('error'))
-                <div class="card animate-fade-in alert-card alert-card-danger">
-                    <div class="alert-card-body">
-                        <i data-lucide="alert-circle" class="alert-card-icon"></i>
-                        <span class="alert-card-text">{{ session('error') }}</span>
+                @if(session('error'))
+                    <div class="card animate-fade-in alert-card alert-card-danger">
+                        <div class="alert-card-body">
+                            <i data-lucide="alert-circle" class="alert-card-icon"></i>
+                            <span class="alert-card-text">{{ session('error') }}</span>
+                        </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            <div class="animate-fade-in">
-                @yield('content')
+                <div class="animate-fade-in">
+                    @yield('content')
+                </div>
             </div>
         </main>
     </div>

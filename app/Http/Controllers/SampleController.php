@@ -41,13 +41,23 @@ class SampleController extends Controller
     /**
      * Show form for new test.
      */
-    public function create(Material $material)
+    public function create(Request $request)
     {
+        $materials = Material::orderBy('name')->get();
+        $selectedMaterial = $materials->firstWhere('id', (int) $request->input('material_id'));
         $parameters = Parameter::all();
         $defaultSampleNo = $this->generateSampleNo();
         $defaultOperator = auth()->user()?->name;
+        $materialName = $selectedMaterial?->name ?? 'Material';
 
-        return view('samples.create', compact('material', 'parameters', 'defaultSampleNo', 'defaultOperator'));
+        return view('samples.create', compact(
+            'materials',
+            'selectedMaterial',
+            'parameters',
+            'defaultSampleNo',
+            'defaultOperator',
+            'materialName'
+        ));
     }
 
     /**
@@ -87,7 +97,7 @@ class SampleController extends Controller
         ];
 
         foreach ($parameterSlugs as $slug) {
-            $validation[$slug] = 'nullable|numeric';
+            $validation[$slug] = 'nullable|numeric|min:0|max:100';
         }
 
         $request->validate($validation);

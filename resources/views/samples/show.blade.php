@@ -44,55 +44,53 @@
 <div class="card mb-4 border-0 shadow-sm">
     <div class="card-body p-4">
         <h3 class="section-title mb-4">Detail Parameter Laboratorium</h3>
-        <div class="table-container">
-            <div class="table-responsive-lg">
-                <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-4 text-nowrap">Parameter Kimia</th>
-                        <th class="text-nowrap">Nilai Hasil Uji</th>
-                        <th class="text-nowrap">Standar Ambang Batas</th>
-                        <th class="text-end pe-4 text-nowrap">Status Analisis</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4 text-nowrap">Parameter Kimia</th>
+                    <th class="text-nowrap">Nilai Hasil Uji</th>
+                    <th class="text-nowrap">Standar Ambang Batas</th>
+                    <th class="text-end pe-4 text-nowrap">Status Analisis</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $rulesByParameter = $sample->material->rules->keyBy('parameter_id');
+                @endphp
+                @foreach($sample->details as $detail)
                     @php
-                        $rulesByParameter = $sample->material->rules->keyBy('parameter_id');
+                        $rule = $rulesByParameter->get($detail->parameter_id);
+                        $status = 'Informasi';
+                        $standard = '—';
+                        
+                        if ($rule) {
+                            $standard = $rule->operator . ' ' . ($rule->value * 100) . '%';
+                            $passed = match($rule->operator) {
+                                '<' => $detail->value < $rule->value,
+                                '>' => $detail->value > $rule->value,
+                                '<=' => $detail->value <= $rule->value,
+                                '>=' => $detail->value >= $rule->value,
+                                default => true
+                            };
+                            $status = $passed ? 'Memenuhi' : 'Tidak Memenuhi';
+                        }
                     @endphp
-                    @foreach($sample->details as $detail)
-                        @php
-                            $rule = $rulesByParameter->get($detail->parameter_id);
-                            $status = 'Informasi';
-                            $standard = '—';
-                            
-                            if ($rule) {
-                                $standard = $rule->operator . ' ' . ($rule->value * 100) . '%';
-                                $passed = match($rule->operator) {
-                                    '<' => $detail->value < $rule->value,
-                                    '>' => $detail->value > $rule->value,
-                                    '<=' => $detail->value <= $rule->value,
-                                    '>=' => $detail->value >= $rule->value,
-                                    default => true
-                                };
-                                $status = $passed ? 'Memenuhi' : 'Tidak Memenuhi';
-                            }
-                        @endphp
-                        <tr>
-                            <td class="ps-4 fw-bold text-nowrap">
-                                {{ $detail->parameter->name }}
-                            </td>
-                            <td class="fw-semibold text-primary text-nowrap">{{ number_format($detail->value * 100, 2) }}%</td>
-                            <td class="text-muted text-nowrap">{{ $standard }}</td>
-                            <td class="text-end pe-4 text-nowrap">
-                                <span class="badge {{ $status == 'Memenuhi' ? 'bg-success-subtle text-success' : ($status == 'Tidak Memenuhi' ? 'bg-danger-subtle text-danger' : 'bg-light text-muted border') }} rounded-pill px-3 py-2">
-                                    {{ $status }}
-                                </span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                </table>
-            </div>
+                    <tr>
+                        <td class="ps-4 fw-bold text-nowrap">
+                            {{ $detail->parameter->name }}
+                        </td>
+                        <td class="fw-semibold text-primary text-nowrap">{{ number_format($detail->value * 100, 2) }}%</td>
+                        <td class="text-muted text-nowrap">{{ $standard }}</td>
+                        <td class="text-end pe-4 text-nowrap">
+                            <span class="badge {{ $status == 'Memenuhi' ? 'bg-success-subtle text-success' : ($status == 'Tidak Memenuhi' ? 'bg-danger-subtle text-danger' : 'bg-light text-muted border') }} rounded-pill px-3 py-2">
+                                {{ $status }}
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+            </table>
         </div>
     </div>
 </div>

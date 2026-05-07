@@ -25,6 +25,8 @@ $input-bg: #ffffff;
 $input-border-radius: 10px;
 $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 
+$min-contrast-ratio: 3.5;
+
 // Import Bootstrap
 @import "bootstrap/scss/bootstrap";
 
@@ -50,10 +52,16 @@ $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
 }
 
+body {
+    overflow-x: hidden;
+}
+
 // Layout Adjustments (Keeping existing logic but refining)
 .app-container {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .sidebar {
@@ -74,6 +82,15 @@ $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     flex: 1;
     margin-left: 280px;
     padding: 2.5rem 3.5rem;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+.main-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: 0.75rem;
 }
 
 // Custom components from app.css that we want to keep
@@ -216,7 +233,6 @@ $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 
     &:hover {
-        color: #fff;
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
     }
@@ -230,15 +246,6 @@ $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         background: var(--bg);
         border-color: var(--secondary);
     }
-}
-
-// Table refinement
-.table-container {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: var(--shadow);
 }
 
 .table {
@@ -334,7 +341,7 @@ $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     }
     .main-content {
         margin-left: 0;
-        padding: 1.5rem;
+        padding: 1.5rem 1.25rem;
     }
     .sidebar-overlay {
         &.active {

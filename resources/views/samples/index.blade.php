@@ -50,59 +50,57 @@
             </a>
         </div>
 
-        <div class="table-container">
-            <div class="table-responsive-lg">
-                <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-4 text-nowrap">No</th>
-                        <th class="text-nowrap">Tanggal</th>
-                        <th>Material</th>
-                        <th class="text-nowrap">No. Sampel</th>
-                        <th>Operator</th>
-                        @foreach($parameters as $parameter)
-                            <th class="text-nowrap">{{ $parameter->name }} (%)</th>
-                        @endforeach
-                        <th>Status</th>
-                        <th class="text-end pe-4 text-nowrap">Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($samples as $index => $sample)
-                    <tr>
-                        <td class="ps-4 text-nowrap">{{ $index + 1 }}</td>
-                        <td class="text-nowrap">{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
-                        <td class="font-semibold">{{ $sample->material->name }}</td>
-                        <td><code class="code-badge text-primary">{{ $sample->sample_no }}</code></td>
-                        <td>{{ $sample->operator }}</td>
-                        @foreach($parameters as $parameter)
-                            @php
-                                $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
-                            @endphp
-                            <td class="fw-medium text-primary text-nowrap">{{ $detail ? number_format($detail->value * 100, 2) . '%' : '-' }}</td>
-                        @endforeach
-                        <td>
-                            <span class="badge {{ $sample->status == 'Layak Kirim' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-pill px-3 py-2">
-                                {{ $sample->status }}
-                            </span>
-                        </td>
-                        <td class="text-end pe-4 text-nowrap">
-                            <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-dark">
-                                Edit
-                            </a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="{{ 7 + $parameters->count() }}" class="text-center py-5 text-muted">
-                            <i data-lucide="inbox" class="mb-3 opacity-25" style="width: 48px; height: 48px;"></i>
-                            <p>Belum ada data laporan untuk kriteria ini.</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4 text-nowrap">No</th>
+                    <th class="text-nowrap">Tanggal</th>
+                    <th>Material</th>
+                    <th class="text-nowrap">No. Sampel</th>
+                    <th>Operator</th>
+                    @foreach($parameters as $parameter)
+                        <th class="text-nowrap">{{ $parameter->name }} (%)</th>
+                    @endforeach
+                    <th>Status</th>
+                    <th class="text-end pe-4 text-nowrap">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($samples as $index => $sample)
+                <tr>
+                    <td class="ps-4 text-nowrap">{{ $index + 1 }}</td>
+                    <td class="text-nowrap">{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
+                    <td class="font-semibold">{{ $sample->material->name }}</td>
+                    <td><code class="code-badge text-primary">{{ $sample->sample_no }}</code></td>
+                    <td>{{ $sample->operator }}</td>
+                    @foreach($parameters as $parameter)
+                        @php
+                            $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
+                        @endphp
+                        <td class="fw-medium text-primary text-nowrap">{{ $detail ? number_format($detail->value * 100, 2) . '%' : '-' }}</td>
+                    @endforeach
+                    <td>
+                        <span class="badge {{ $sample->status == 'Layak Kirim' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-pill px-3 py-2">
+                            {{ $sample->status }}
+                        </span>
+                    </td>
+                    <td class="text-end pe-4 text-nowrap">
+                        <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-dark">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="{{ 7 + $parameters->count() }}" class="text-center py-5 text-muted">
+                        <i data-lucide="inbox" class="mb-3 opacity-25" style="width: 48px; height: 48px;"></i>
+                        <p>Belum ada data laporan untuk kriteria ini.</p>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+            </table>
         </div>
     </div>
 </div>

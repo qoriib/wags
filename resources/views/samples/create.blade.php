@@ -1,14 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Input Data Uji - ' . $material->name)
+@section('title', 'Input Data Uji - ' . $materialName)
 @section('header_title', 'Halaman Input Data Uji')
-@section('header_subtitle', 'Masukkan hasil uji laboratorium untuk material ' . $material->name)
+@section('header_subtitle', 'Masukkan hasil uji laboratorium untuk material ' . $materialName)
 
 @section('content')
 <form action="{{ route('samples.store') }}" method="POST">
     @csrf
-    <input type="hidden" name="material_id" value="{{ $material->id }}">
-
     <div class="row g-4 mb-4">
         <!-- Informasi Sampel -->
         <div class="col-lg-6">
@@ -18,7 +16,17 @@
                     
                     <div class="mb-3">
                         <label class="form-label">Jenis Material</label>
-                        <input type="text" class="form-control" value="{{ $material->name }}" disabled>
+                        <select name="material_id" class="form-select" required>
+                            <option value="">Pilih Material</option>
+                            @foreach($materials as $material)
+                                <option value="{{ $material->id }}" {{ old('material_id', $selectedMaterial?->id) == $material->id ? 'selected' : '' }}>
+                                    {{ $material->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('material_id')
+                            <div class="text-danger small mt-1 fw-medium">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
@@ -55,7 +63,7 @@
                             <div class="mb-3">
                                 <label class="form-label text-muted small fw-semibold">{{ $parameter->name }} (%)</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.0001" name="{{ $parameter->slug }}" class="form-control" placeholder="0.0000" value="{{ old($parameter->slug) }}">
+                                    <input type="number" step="0.0001" min="0" max="100" name="{{ $parameter->slug }}" class="form-control" placeholder="0.0000" value="{{ old($parameter->slug) }}">
                                     <span class="input-group-text bg-light text-muted small">%</span>
                                 </div>
                             </div>
