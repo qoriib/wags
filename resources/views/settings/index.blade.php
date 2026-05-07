@@ -41,7 +41,7 @@
                             @endphp
                             <span class="text-muted">{{ $opLabel }}</span>
                         </td>
-                        <td class="font-semibold">{{ $rule->value * 100 }}%</td>
+                        <td class="font-semibold">{{ $rule->value }}%</td>
                         <td class="text-end hstack justify-content-end gap-2">
                             <button onclick="editRule({{ json_encode($rule) }})" class="btn btn-sm btn-outline-secondary">
                                 Edit
@@ -114,10 +114,9 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Nilai Batas (%)</label>
                         <div class="input-group">
-                            <input type="number" step="0.0001" name="input_value" id="input_value" class="form-control" placeholder="0.5" required oninput="updateHiddenValue()">
+                            <input type="number" step="0.0001" name="value" id="value" class="form-control" placeholder="0.5" required>
                             <span class="input-group-text bg-light">%</span>
                         </div>
-                        <input type="hidden" name="value" id="hidden_value">
                     </div>
                 </div>
             </div>
@@ -139,12 +138,8 @@
     const methodField = document.getElementById('method-field');
     const submitBtn = document.getElementById('submit-btn');
     const materialSelect = document.getElementById('material_id');
-    const inputValue = document.getElementById('input_value');
-    const hiddenValue = document.getElementById('hidden_value');
 
-    function updateHiddenValue() {
-        hiddenValue.value = inputValue.value / 100;
-    }
+    // Value handling is now done by model accessors/mutators
 
     function editRule(rule) {
         title.innerText = 'TAMBAH / EDIT ATURAN';
@@ -156,8 +151,7 @@
         
         document.getElementById('parameter_id').value = rule.parameter_id;
         document.getElementById('operator').value = rule.operator;
-        inputValue.value = rule.value * 100;
-        updateHiddenValue();
+        document.getElementById('value').value = rule.value;
         
         document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
     }

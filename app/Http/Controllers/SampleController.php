@@ -105,12 +105,12 @@ class SampleController extends Controller
         $material = Material::findOrFail($request->material_id);
         $rules = Rule::with('parameter')->where('material_id', $material->id)->get();
 
-        // Prepare parameter values (convert percentages to 0-1 decimals)
+        // Prepare parameter values (now handled by model mutators)
         $rawParams = $parameterSlugs;
         $processedParams = [];
         foreach ($rawParams as $p) {
             if ($request->has($p) && $request->input($p) !== null) {
-                $processedParams[$p] = $request->input($p) / 100;
+                $processedParams[$p] = $request->input($p);
             }
         }
 
@@ -217,7 +217,7 @@ class SampleController extends Controller
             ['Status']
         );
 
-        $callback = function () use ($samples, $columns) {
+        $callback = function () use ($samples, $columns, $parameters) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
@@ -232,7 +232,7 @@ class SampleController extends Controller
 
                 foreach ($parameters as $parameter) {
                     $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
-                    $row[] = $detail ? ($detail->value * 100).'%' : '-';
+                    $row[] = $detail ? $detail->value.'%' : '-';
                 }
 
                 $row[] = $sample->status;

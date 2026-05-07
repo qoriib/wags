@@ -78,7 +78,7 @@
                         @php
                             $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
                         @endphp
-                        <td class="fw-medium text-primary text-nowrap">{{ $detail ? number_format($detail->value * 100, 2) . '%' : '-' }}</td>
+                        <td class="fw-medium text-primary text-nowrap">{{ $detail ? number_format($detail->value, 2) . '%' : '-' }}</td>
                     @endforeach
                     <td>
                         <span class="badge {{ $sample->status == 'Layak Kirim' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-pill px-3 py-2">
@@ -87,7 +87,7 @@
                     </td>
                     <td class="text-end pe-4 text-nowrap">
                         <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-dark">
-                            Edit
+                            Detail
                         </a>
                     </td>
                 </tr>
