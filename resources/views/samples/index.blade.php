@@ -46,7 +46,6 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="section-title mb-0">REKAPITULASI HASIL UJI</h3>
             <a href="{{ route('samples.export', request()->all()) }}" class="btn btn-outline-success">
-                <i data-lucide="download" class="me-2 w-4 h-4"></i>
                 <span>Export CSV</span>
             </a>
         </div>
@@ -88,8 +87,8 @@
                             </span>
                         </td>
                         <td class="text-end pe-4 text-nowrap">
-                            <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-light text-primary border-0 shadow-none">
-                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-dark">
+                                Edit
                             </a>
                         </td>
                     </tr>

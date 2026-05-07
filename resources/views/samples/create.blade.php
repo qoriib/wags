@@ -23,7 +23,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">No. Sampel *</label>
-                        <input type="text" name="sample_no" class="form-control" placeholder="Contoh: LAB-2026-001" required value="{{ old('sample_no') }}">
+                        <input type="text" name="sample_no" class="form-control" placeholder="Contoh: LAB-2026-001" required value="{{ old('sample_no', $defaultSampleNo) }}">
                         @error('sample_no') 
                             <div class="text-danger small mt-1 fw-medium">{{ $message }}</div> 
                         @enderror
@@ -36,7 +36,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Operator *</label>
-                        <input type="text" name="operator" class="form-control" placeholder="Nama petugas lab" required value="{{ old('operator') }}">
+                        <input type="text" name="operator" class="form-control" placeholder="Nama petugas lab" required value="{{ old('operator', $defaultOperator) }}">
                     </div>
                 </div>
             </div>

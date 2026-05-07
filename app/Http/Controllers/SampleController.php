@@ -44,8 +44,33 @@ class SampleController extends Controller
     public function create(Material $material)
     {
         $parameters = Parameter::all();
+        $defaultSampleNo = $this->generateSampleNo();
+        $defaultOperator = auth()->user()?->name;
 
-        return view('samples.create', compact('material', 'parameters'));
+        return view('samples.create', compact('material', 'parameters', 'defaultSampleNo', 'defaultOperator'));
+    }
+
+    /**
+     * Build the next sample number for the current year.
+     */
+    private function generateSampleNo(): string
+    {
+        $year = now()->format('Y');
+        $prefix = "LAB-{$year}-";
+
+        $lastSample = Sample::where('sample_no', 'like', $prefix.'%')
+            ->orderBy('sample_no', 'desc')
+            ->first();
+
+        $lastNumber = 0;
+        if ($lastSample) {
+            $lastPart = str_replace($prefix, '', $lastSample->sample_no);
+            $lastNumber = ctype_digit($lastPart) ? (int) $lastPart : 0;
+        }
+
+        $nextNumber = str_pad((string) ($lastNumber + 1), 3, '0', STR_PAD_LEFT);
+
+        return $prefix.$nextNumber;
     }
 
     /**
