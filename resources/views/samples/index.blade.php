@@ -61,26 +61,27 @@
                         <th>Material</th>
                         <th class="text-nowrap">No. Sampel</th>
                         <th>Operator</th>
-                        <th class="text-nowrap">Fe₂O₃ (%)</th>
-                        <th class="text-nowrap">CaO (%)</th>
+                        @foreach($parameters as $parameter)
+                            <th class="text-nowrap">{{ $parameter->name }} (%)</th>
+                        @endforeach
                         <th>Status</th>
                         <th class="text-end pe-4 text-nowrap">Detail</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($samples as $index => $sample)
-                    @php
-                        $fe2o3 = $sample->details->where('material.slug', 'fe2o3')->first();
-                        $cao = $sample->details->where('material.slug', 'cao')->first();
-                    @endphp
                     <tr>
                         <td class="ps-4 text-nowrap">{{ $index + 1 }}</td>
                         <td class="text-nowrap">{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
                         <td class="font-semibold">{{ $sample->material->name }}</td>
                         <td><code class="code-badge text-primary">{{ $sample->sample_no }}</code></td>
                         <td>{{ $sample->operator }}</td>
-                        <td class="fw-medium text-primary text-nowrap">{{ $fe2o3 ? number_format($fe2o3->value * 100, 2) . '%' : '-' }}</td>
-                        <td class="fw-medium text-primary text-nowrap">{{ $cao ? number_format($cao->value * 100, 2) . '%' : '-' }}</td>
+                        @foreach($parameters as $parameter)
+                            @php
+                                $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
+                            @endphp
+                            <td class="fw-medium text-primary text-nowrap">{{ $detail ? number_format($detail->value * 100, 2) . '%' : '-' }}</td>
+                        @endforeach
                         <td>
                             <span class="badge {{ $sample->status == 'Layak Kirim' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-pill px-3 py-2">
                                 {{ $sample->status }}
@@ -94,7 +95,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center py-5 text-muted">
+                        <td colspan="{{ 7 + $parameters->count() }}" class="text-center py-5 text-muted">
                             <i data-lucide="inbox" class="mb-3 opacity-25" style="width: 48px; height: 48px;"></i>
                             <p>Belum ada data laporan untuk kriteria ini.</p>
                         </td>

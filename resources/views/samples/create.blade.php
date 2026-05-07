@@ -50,12 +50,12 @@
                     <p class="text-muted small mb-4">Isi parameter sesuai hasil uji laboratorium (Standar SNI 0449:2010)</p>
 
                     <div class="row g-3">
-                        @foreach(['fe2o3' => 'Fe₂O₃', 'cao' => 'CaO', 'sio2' => 'SiO₂', 'al2o3' => 'Al₂O₃', 'caco3' => 'CaCO₃', 'loi' => 'LoI'] as $key => $label)
+                        @foreach($parameters as $parameter)
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="form-label text-muted small fw-semibold">{{ $label }} (%)</label>
+                                <label class="form-label text-muted small fw-semibold">{{ $parameter->name }} (%)</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.0001" name="{{ $key }}" class="form-control" placeholder="0.0000" value="{{ old($key) }}">
+                                    <input type="number" step="0.0001" name="{{ $parameter->slug }}" class="form-control" placeholder="0.0000" value="{{ old($parameter->slug) }}">
                                     <span class="input-group-text bg-light text-muted small">%</span>
                                 </div>
                             </div>

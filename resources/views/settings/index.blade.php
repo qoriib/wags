@@ -34,7 +34,7 @@
                     @foreach($rules as $rule)
                     <tr>
                         <td class="ps-4 font-bold">{{ $rule->material->name }}</td>
-                        <td><code class="code-badge text-primary">{{ $rule->material->chemical_formula }}</code></td>
+                        <td><code class="code-badge text-primary">{{ $rule->parameter?->name ?? '—' }}</code></td>
                         <td>
                             @php
                                 $opLabel = match($rule->operator) {
@@ -74,7 +74,6 @@
     <div class="card-body p-4">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
             <h3 class="section-title mb-0" id="form-title">TAMBAH ATURAN BARU</h3>
-            <span class="badge bg-light text-dark">Form Aturan</span>
         </div>
         
         <form id="rule-form" action="{{ route('settings.rules.store') }}" method="POST">
@@ -88,7 +87,7 @@
                         <select name="material_id" id="material_id" class="form-select" required onchange="updateFormulaDisplay()">
                             <option value="">Pilih Material</option>
                             @foreach($materials as $material)
-                                <option value="{{ $material->id }}" data-formula="{{ $material->chemical_formula }}">{{ $material->name }}</option>
+                                <option value="{{ $material->id }}" data-formula="{{ $material->formula }}">{{ $material->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -96,8 +95,20 @@
                 
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Parameter Terdeteksi</label>
+                        <label class="form-label fw-semibold">Formula Material</label>
                         <input type="text" id="formula-display" class="form-control" value="—" disabled>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Parameter</label>
+                        <select name="parameter_id" id="parameter_id" class="form-select" required>
+                            <option value="">Pilih Parameter</option>
+                            @foreach($parameters as $parameter)
+                                <option value="{{ $parameter->id }}">{{ $parameter->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -162,6 +173,7 @@
         materialSelect.value = rule.material_id;
         updateFormulaDisplay();
         
+        document.getElementById('parameter_id').value = rule.parameter_id;
         document.getElementById('operator').value = rule.operator;
         inputValue.value = rule.value * 100;
         updateHiddenValue();

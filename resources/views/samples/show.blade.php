@@ -56,16 +56,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $rulesByParameter = $sample->material->rules->keyBy('parameter_id');
+                    @endphp
                     @foreach($sample->details as $detail)
                         @php
-                            $isTarget = strtolower($sample->material->chemical_formula) == strtolower($detail->material->name) 
-                                     || strtolower($sample->material->chemical_formula) == strtolower($detail->material->slug);
-                            
-                            $rule = $sample->material->rules->first();
+                            $rule = $rulesByParameter->get($detail->parameter_id);
                             $status = 'Informasi';
                             $standard = '—';
                             
-                            if ($isTarget && $rule) {
+                            if ($rule) {
                                 $standard = $rule->operator . ' ' . ($rule->value * 100) . '%';
                                 $passed = match($rule->operator) {
                                     '<' => $detail->value < $rule->value,
@@ -79,8 +79,7 @@
                         @endphp
                         <tr>
                             <td class="ps-4 fw-bold text-nowrap">
-                                {{ $detail->material->name }}
-                                @if($isTarget) <span class="badge bg-primary-subtle text-primary rounded-pill small ms-2 px-2">TARGET</span> @endif
+                                {{ $detail->parameter->name }}
                             </td>
                             <td class="fw-semibold text-primary text-nowrap">{{ number_format($detail->value * 100, 2) }}%</td>
                             <td class="text-muted text-nowrap">{{ $standard }}</td>
@@ -108,7 +107,7 @@
             <p class="mb-2 text-muted">// Analisis material</p>
             <p class="mb-2"><span class="text-danger fw-bold">IF</span> material == <strong>"{{ $sample->material->name }}"</strong></p>
             @foreach($sample->material->rules as $rule)
-                <p class="mb-2 ps-4"><span class="text-danger fw-bold">AND</span> {{ $sample->material->chemical_formula }} {{ $rule->operator }} {{ $rule->value * 100 }}%</p>
+                <p class="mb-2 ps-4"><span class="text-danger fw-bold">AND</span> {{ $rule->parameter?->name ?? '—' }} {{ $rule->operator }} {{ $rule->value * 100 }}%</p>
             @endforeach
             <p class="mt-4"><span class="text-danger fw-bold">THEN</span> status = <span class="badge bg-primary-subtle text-primary fw-bold px-3">"{{ $sample->status }}"</span></p>
         </div>

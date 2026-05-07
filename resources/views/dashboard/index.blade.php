@@ -43,10 +43,9 @@
                         @php
                             $icon = match($material->slug) {
                                 'kaolin' => 'mountain',
-                                'limestone' => 'container',
-                                'clay-f1' => 'brick',
+                                'clay' => 'brick',
                                 'feldspar' => 'diamond',
-                                'clay-pasiran' => 'loader',
+                                'pasir-silika' => 'loader',
                                 default => 'box'
                             };
                         @endphp
