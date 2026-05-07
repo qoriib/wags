@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'PT WAGS - Sistem Pakar')</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
     @yield('styles')
 </head>
@@ -48,11 +48,11 @@
                 </li>
             </nav>
 
-            <div style="margin-top: auto; padding-top: 2rem;">
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            <div class="mt-auto pt-4">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
-                <a href="#" class="nav-link" style="color: var(--danger);" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" class="nav-link nav-link-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i data-lucide="log-out"></i>
                     <span>Keluar</span>
                 </a>
@@ -61,41 +61,37 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                <div style="display: flex; align-items: center; gap: 1rem;">
+            <header class="app-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
                     <button class="header-mobile-toggle" id="sidebarToggle">
                         <i data-lucide="menu"></i>
                     </button>
-                    <div>
-                        <h2 style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">@yield('header_title')</h2>
-                        <p style="color: var(--text-muted); font-size: 0.9375rem; margin-top: 0.25rem;" class="hide-mobile">@yield('header_subtitle')</p>
-                    </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 1.25rem;">
-                    <div style="text-align: right;" class="hide-mobile">
-                        <p style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main);">Admin Internal</p>
-                        <p style="color: var(--text-muted); font-size: 0.8125rem;">PT Wina Alam Gunung Semesta</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="text-end d-none d-lg-block">
+                        <p class="user-title">Admin Internal</p>
+                        <p class="user-subtitle">PT Wina Alam Gunung Semesta</p>
                     </div>
-                    <div style="width: 48px; height: 48px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);">
-                        <i data-lucide="user" style="width: 24px; height: 24px; color: var(--text-muted);"></i>
+                    <div class="user-avatar">
+                        <i data-lucide="user" class="user-avatar-icon"></i>
                     </div>
                 </div>
             </header>
 
             @if(session('success'))
-                <div class="card animate-fade-in" style="background: var(--success-light); border-color: var(--success); color: var(--success); padding: 1.25rem; margin-bottom: 2rem; border-radius: var(--radius-sm);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
-                        <span style="font-weight: 600;">{{ session('success') }}</span>
+                <div class="card animate-fade-in alert-card alert-card-success">
+                    <div class="alert-card-body">
+                        <i data-lucide="check-circle" class="alert-card-icon"></i>
+                        <span class="alert-card-text">{{ session('success') }}</span>
                     </div>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="card animate-fade-in" style="background: var(--danger-light); border-color: var(--danger); color: var(--danger); padding: 1.25rem; margin-bottom: 2rem; border-radius: var(--radius-sm);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
-                        <span style="font-weight: 600;">{{ session('error') }}</span>
+                <div class="card animate-fade-in alert-card alert-card-danger">
+                    <div class="alert-card-body">
+                        <i data-lucide="alert-circle" class="alert-card-icon"></i>
+                        <span class="alert-card-text">{{ session('error') }}</span>
                     </div>
                 </div>
             @endif
@@ -105,12 +101,6 @@
             </div>
         </main>
     </div>
-
-    <style>
-        @media (max-width: 640px) {
-            .hide-mobile { display: none; }
-        }
-    </style>
 
     <script>
         lucide.createIcons();

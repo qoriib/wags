@@ -5,111 +5,132 @@
 @section('header_subtitle', 'Kelola parameter dan ambang batas untuk klasifikasi kualitas material')
 
 @section('content')
-<div class="card mb-8">
-    <div class="flex-between mb-8">
-        <h3 class="section-title text-xl mb-0">BASIS ATURAN FORWARD CHAINING</h3>
-        <button class="btn btn-outline primary-text" onclick="resetForm()">
-            <i data-lucide="plus"></i>
-            <span>Tambah Aturan</span>
-        </button>
-    </div>
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+                <h3 class="section-title mb-1">BASIS ATURAN FORWARD CHAINING</h3>
+                <p class="text-muted small mb-0">Kelola parameter dan ambang batas aturan</p>
+            </div>
+            <button class="btn btn-primary fw-semibold" onclick="resetForm()">
+                <i data-lucide="plus" class="me-2"></i>
+                <span>Tambah Aturan</span>
+            </button>
+        </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Material</th>
-                    <th>Parameter (Rumus)</th>
-                    <th>Kondisi</th>
-                    <th>Nilai Batas</th>
-                    <th class="align-right">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($rules as $rule)
-                <tr>
-                    <td class="font-bold">{{ $rule->material->name }}</td>
-                    <td><code class="code-badge">{{ $rule->material->chemical_formula }}</code></td>
-                    <td>
-                        @php
-                            $opLabel = match($rule->operator) {
-                                '<' => 'Kurang dari',
-                                '>' => 'Lebih dari',
-                                '<=' => 'Kurang dari sama dengan',
-                                '>=' => 'Lebih dari sama dengan',
-                            };
-                        @endphp
-                        {{ $opLabel }} ({{ $rule->operator }})
-                    </td>
-                    <td class="font-semibold">{{ $rule->value * 100 }}%</td>
-                    <td class="align-right">
-                        <div class="d-flex flex-gap-3 justify-end items-center">
-                            <button onclick="editRule({{ json_encode($rule) }})" class="btn btn-outline btn-sm">
-                                <i data-lucide="edit-2" class="w-4 h-4"></i>
-                                <span>Edit</span>
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Material</th>
+                        <th>Parameter (Rumus)</th>
+                        <th>Kondisi</th>
+                        <th>Nilai Batas</th>
+                        <th class="text-end pe-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($rules as $rule)
+                    <tr>
+                        <td class="ps-4 font-bold">{{ $rule->material->name }}</td>
+                        <td><code class="code-badge text-primary">{{ $rule->material->chemical_formula }}</code></td>
+                        <td>
+                            @php
+                                $opLabel = match($rule->operator) {
+                                    '<' => 'Kurang dari',
+                                    '>' => 'Lebih dari',
+                                    '<=' => 'Kurang dari sama dengan',
+                                    '>=' => 'Lebih dari sama dengan',
+                                };
+                            @endphp
+                            <span class="text-muted">{{ $opLabel }}</span> 
+                            <span class="badge bg-light text-dark ms-1">{{ $rule->operator }}</span>
+                        </td>
+                        <td class="font-semibold text-primary">{{ $rule->value * 100 }}%</td>
+                        <td class="text-end hstack justify-content-end gap-2">
+                            <button onclick="editRule({{ json_encode($rule) }})" class="btn btn-sm btn-outline-secondary">
+                                Edit
                             </button>
                             
-                            <form action="{{ route('settings.rules.destroy', $rule->id) }}" method="POST" onsubmit="return confirm('Hapus aturan ini?')" class="inline-block">
+                            <form action="{{ route('settings.rules.destroy', $rule->id) }}" method="POST" onsubmit="return confirm('Hapus aturan ini?')" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline btn-sm danger-outline">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Hapus
                                 </button>
                             </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="card scroll-mt-8" id="form-card">
-    <h3 class="section-title text-xl" id="form-title">TAMBAH ATURAN BARU</h3>
-    
-    <form id="rule-form" action="{{ route('settings.rules.store') }}" method="POST">
-        @csrf
-        <div id="method-field"></div>
+<div class="card border-0 shadow-sm scroll-mt-8" id="form-card">
+    <div class="card-body p-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <h3 class="section-title mb-0" id="form-title">TAMBAH ATURAN BARU</h3>
+            <span class="badge bg-light text-dark">Form Aturan</span>
+        </div>
         
-        <div class="grid grid-2">
-            <div class="form-group">
-                <label class="form-label">Material</label>
-                <select name="material_id" id="material_id" class="form-control" required onchange="updateFormulaDisplay()">
-                    <option value="">Pilih Material</option>
-                    @foreach($materials as $material)
-                        <option value="{{ $material->id }}" data-formula="{{ $material->chemical_formula }}">{{ $material->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <form id="rule-form" action="{{ route('settings.rules.store') }}" method="POST">
+            @csrf
+            <div id="method-field"></div>
             
-            <div class="form-group">
-                <label class="form-label">Parameter Terdeteksi</label>
-                <input type="text" id="formula-display" class="form-control bg-muted" value="—" disabled>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Material</label>
+                        <select name="material_id" id="material_id" class="form-select" required onchange="updateFormulaDisplay()">
+                            <option value="">Pilih Material</option>
+                            @foreach($materials as $material)
+                                <option value="{{ $material->id }}" data-formula="{{ $material->chemical_formula }}">{{ $material->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Parameter Terdeteksi</label>
+                        <input type="text" id="formula-display" class="form-control" value="—" disabled>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Kondisi</label>
+                        <select name="operator" id="operator" class="form-select" required>
+                            <option value="<">Kurang dari (<)</option>
+                            <option value=">">Lebih dari (>)</option>
+                            <option value="<=">Kurang dari sama dengan (<=)</option>
+                            <option value=">=">Lebih dari sama dengan (>=)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nilai Batas (%)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.0001" name="input_value" id="input_value" class="form-control" placeholder="0.5" required oninput="updateHiddenValue()">
+                            <span class="input-group-text bg-light">%</span>
+                        </div>
+                        <input type="hidden" name="value" id="hidden_value">
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Kondisi</label>
-                <select name="operator" id="operator" class="form-control" required>
-                    <option value="<">Kurang dari (<)</option>
-                    <option value=">">Lebih dari (>)</option>
-                    <option value="<=">Kurang dari sama dengan (<=)</option>
-                    <option value=">=">Lebih dari sama dengan (>=)</option>
-                </select>
+            <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 mt-4">
+                <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">Batal</button>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Simpan Aturan</button>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">Nilai Batas (%)</label>
-                <input type="number" step="0.0001" name="input_value" id="input_value" class="form-control" placeholder="0.5" required oninput="updateHiddenValue()">
-                <input type="hidden" name="value" id="hidden_value">
-            </div>
-        </div>
-
-        <div class="d-flex flex-gap-4 mt-10">
-            <button type="button" class="btn btn-outline flex-1 p-4" onclick="resetForm()">Batal</button>
-            <button type="submit" class="btn btn-primary flex-2 p-4" id="submit-btn">Simpan Aturan</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 @section('scripts')

@@ -1,0 +1,378 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Bootstrap Variables Overrides
+$primary: #3b82f6;
+$success: #10b981;
+$danger: #ef4444;
+$warning: #f59e0b;
+$secondary: #64748b;
+
+$body-bg: #f8f7f2;
+$body-color: #1e293b;
+$font-family-sans-serif: 'Inter', sans-serif;
+
+$card-bg: #ffffff;
+$card-border-radius: 15px;
+$card-border-color: #e2e8f0;
+$card-cap-bg: transparent;
+
+$btn-border-radius: 10px;
+$btn-font-weight: 600;
+
+$form-label-font-weight: 600;
+$input-bg: #ffffff;
+$input-border-radius: 10px;
+$input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Custom Variables (matching public/css/app.css)
+:root {
+    --primary: #{$primary};
+    --primary-dark: #2563eb;
+    --primary-light: #eff6ff;
+    --secondary: #{$secondary};
+    --success: #{$success};
+    --success-light: #ecfdf5;
+    --danger: #{$danger};
+    --danger-light: #fef2f2;
+    --warning: #{$warning};
+    --bg: #{$body-bg};
+    --card-bg: #{$card-bg};
+    --text-main: #{$body-color};
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 15px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+// Layout Adjustments (Keeping existing logic but refining)
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--card-bg);
+    border-right: 1px solid var(--border);
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 1050; // Above Bootstrap defaults
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2.5rem 3.5rem;
+}
+
+// Custom components from app.css that we want to keep
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 3rem;
+    padding: 0 0.5rem;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+    color: var(--text-main);
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1.125rem;
+    text-decoration: none !important;
+    color: var(--text-muted);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+        transform: translateX(4px);
+    }
+
+    &.active {
+        background: var(--primary-light);
+        color: var(--primary);
+        font-weight: 600;
+    }
+}
+
+.nav-link-danger {
+    color: var(--danger);
+}
+
+// Enhancing Bootstrap Cards to match premium look
+.card {
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border);
+
+    &:hover {
+        box-shadow: var(--shadow-lg);
+    }
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+}
+
+.app-header {
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0;
+}
+
+.header-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+.user-title {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--text-main);
+    margin-bottom: 0;
+}
+
+.user-subtitle {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    margin-bottom: 0;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.user-avatar-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--text-muted);
+}
+
+// Buttons refinement
+.btn-primary {
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+    }
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-main);
+    &:hover {
+        background: var(--bg);
+        border-color: var(--secondary);
+    }
+}
+
+// Table refinement
+.table-container {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.table {
+    margin-bottom: 0;
+    background-color: #ffffff;
+    
+    thead th {
+        background: #ffffff;
+        padding: 1.125rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border);
+    }
+
+    tbody td {
+        background-color: #ffffff;
+        padding: 1.125rem 1.5rem;
+        vertical-align: middle;
+        font-size: 0.9375rem;
+    }
+
+    &.table-hover tbody tr:hover td {
+        background-color: #fcfcfc;
+    }
+}
+
+// Ensure all inputs are white
+.form-control, .form-select {
+    background-color: #ffffff !important;
+}
+
+// Utility Classes from original app.css
+.code-badge {
+    background: var(--bg);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.alert-card {
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    border-radius: var(--radius-sm);
+}
+
+.alert-card-success {
+    background: var(--success-light);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.alert-card-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.alert-card-body {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.alert-card-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.alert-card-text {
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+// Mobile Responsive
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+        &.active {
+            transform: translateX(0);
+        }
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+    .sidebar-overlay {
+        &.active {
+            display: block;
+        }
+    }
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1040;
+}
+
+.header-mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-main);
+
+    @media (max-width: 1024px) {
+        display: flex;
+    }
+}
+
+// Custom Helpers
+.primary-text { color: var(--primary) !important; }
+.danger-outline { border-color: #fee2e2 !important; color: var(--danger) !important; }
+.flex-gap-3 { gap: 0.75rem; }
+.flex-gap-4 { gap: 1rem; }
