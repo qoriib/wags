@@ -21,7 +21,7 @@
                         
                         <div class="mb-4 text-start">
                             <label class="form-label fw-semibold" for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control py-2 px-3" placeholder="Masukkan email Anda" value="{{ old('email', 'admin@wags.com') }}" required autofocus>
+                            <input type="email" id="email" name="email" class="form-control py-2 px-3" placeholder="Masukkan email Anda" required autofocus>
                             @error('email') 
                                 <div class="text-danger small mt-2 fw-medium">{{ $message }}</div> 
                             @enderror
@@ -29,7 +29,7 @@
 
                         <div class="mb-5 text-start">
                             <label class="form-label fw-semibold" for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control py-2 px-3" placeholder="••••••••" value="password123" required>
+                            <input type="password" id="password" name="password" class="form-control py-2 px-3" placeholder="••••••••" required>
                             @error('password') 
                                 <div class="text-danger small mt-2 fw-medium">{{ $message }}</div> 
                             @enderror
