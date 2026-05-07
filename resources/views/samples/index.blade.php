@@ -51,19 +51,20 @@
             </a>
         </div>
 
-        <div class="table-responsive table-container border-0 shadow-none">
-            <table class="table table-hover align-middle">
+        <div class="table-container">
+            <div class="table-responsive-lg">
+                <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">No</th>
-                        <th>Tanggal</th>
+                        <th class="ps-4 text-nowrap">No</th>
+                        <th class="text-nowrap">Tanggal</th>
                         <th>Material</th>
-                        <th>No. Sampel</th>
+                        <th class="text-nowrap">No. Sampel</th>
                         <th>Operator</th>
-                        <th>Fe₂O₃ (%)</th>
-                        <th>CaO (%)</th>
+                        <th class="text-nowrap">Fe₂O₃ (%)</th>
+                        <th class="text-nowrap">CaO (%)</th>
                         <th>Status</th>
-                        <th class="text-end pe-4">Detail</th>
+                        <th class="text-end pe-4 text-nowrap">Detail</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,19 +74,19 @@
                         $cao = $sample->details->where('material.slug', 'cao')->first();
                     @endphp
                     <tr>
-                        <td class="ps-4">{{ $index + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
+                        <td class="ps-4 text-nowrap">{{ $index + 1 }}</td>
+                        <td class="text-nowrap">{{ \Carbon\Carbon::parse($sample->test_date)->format('d/m/Y') }}</td>
                         <td class="font-semibold">{{ $sample->material->name }}</td>
                         <td><code class="code-badge text-primary">{{ $sample->sample_no }}</code></td>
                         <td>{{ $sample->operator }}</td>
-                        <td class="fw-medium text-primary">{{ $fe2o3 ? number_format($fe2o3->value * 100, 2) . '%' : '-' }}</td>
-                        <td class="fw-medium text-primary">{{ $cao ? number_format($cao->value * 100, 2) . '%' : '-' }}</td>
+                        <td class="fw-medium text-primary text-nowrap">{{ $fe2o3 ? number_format($fe2o3->value * 100, 2) . '%' : '-' }}</td>
+                        <td class="fw-medium text-primary text-nowrap">{{ $cao ? number_format($cao->value * 100, 2) . '%' : '-' }}</td>
                         <td>
                             <span class="badge {{ $sample->status == 'Layak Kirim' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-pill px-3 py-2">
                                 {{ $sample->status }}
                             </span>
                         </td>
-                        <td class="text-end pe-4">
+                        <td class="text-end pe-4 text-nowrap">
                             <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-light text-primary border-0 shadow-none">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </a>
@@ -100,7 +101,8 @@
                     </tr>
                     @endforelse
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </div>

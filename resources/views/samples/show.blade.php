@@ -44,14 +44,15 @@
 <div class="card mb-4 border-0 shadow-sm">
     <div class="card-body p-4">
         <h3 class="section-title mb-4">Detail Parameter Laboratorium</h3>
-        <div class="table-responsive table-container border-0 shadow-none">
-            <table class="table table-hover align-middle">
+        <div class="table-container">
+            <div class="table-responsive-lg">
+                <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Parameter Kimia</th>
-                        <th>Nilai Hasil Uji</th>
-                        <th>Standar Ambang Batas</th>
-                        <th class="text-end pe-4">Status Analisis</th>
+                        <th class="ps-4 text-nowrap">Parameter Kimia</th>
+                        <th class="text-nowrap">Nilai Hasil Uji</th>
+                        <th class="text-nowrap">Standar Ambang Batas</th>
+                        <th class="text-end pe-4 text-nowrap">Status Analisis</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,13 +78,13 @@
                             }
                         @endphp
                         <tr>
-                            <td class="ps-4 fw-bold">
+                            <td class="ps-4 fw-bold text-nowrap">
                                 {{ $detail->material->name }}
                                 @if($isTarget) <span class="badge bg-primary-subtle text-primary rounded-pill small ms-2 px-2">TARGET</span> @endif
                             </td>
-                            <td class="fw-semibold text-primary">{{ number_format($detail->value * 100, 2) }}%</td>
-                            <td class="text-muted">{{ $standard }}</td>
-                            <td class="text-end pe-4">
+                            <td class="fw-semibold text-primary text-nowrap">{{ number_format($detail->value * 100, 2) }}%</td>
+                            <td class="text-muted text-nowrap">{{ $standard }}</td>
+                            <td class="text-end pe-4 text-nowrap">
                                 <span class="badge {{ $status == 'Memenuhi' ? 'bg-success-subtle text-success' : ($status == 'Tidak Memenuhi' ? 'bg-danger-subtle text-danger' : 'bg-light text-muted border') }} rounded-pill px-3 py-2">
                                     {{ $status }}
                                 </span>
@@ -91,7 +92,8 @@
                         </tr>
                     @endforeach
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </div>
