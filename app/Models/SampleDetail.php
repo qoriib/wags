@@ -9,7 +9,7 @@ class SampleDetail extends Model
 {
     protected $fillable = [
         'sample_id',
-        'material_id',
+        'parameter_id',
         'value',
     ];
 
@@ -22,10 +22,10 @@ class SampleDetail extends Model
     }
 
     /**
-     * Get the material (parameter) associated with the detail.
+     * Get the parameter associated with the detail.
      */
-    public function material(): BelongsTo
+    public function parameter(): BelongsTo
     {
-        return $this->belongsTo(Material::class, 'material_id');
+        return $this->belongsTo(Parameter::class);
     }
 }

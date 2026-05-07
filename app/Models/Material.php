@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Material extends Model
 {
-    protected $fillable = ['name', 'slug', 'chemical_formula'];
+    protected $fillable = ['name', 'slug', 'formula'];
 
     /**
      * Get the rules for the material.

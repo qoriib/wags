@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sample extends Model
 {
@@ -18,7 +19,7 @@ class Sample extends Model
     /**
      * Get the details for the sample.
      */
-    public function details()
+    public function details(): HasMany
     {
         return $this->hasMany(SampleDetail::class);
     }

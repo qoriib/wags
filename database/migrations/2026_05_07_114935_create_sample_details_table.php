@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('sample_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sample_id')->constrained()->onDelete('cascade');
-            $table->foreignId('material_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sample_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('parameter_id')->constrained()->restrictOnDelete();
             $table->decimal('value', 12, 6);
             $table->timestamps();
         });
