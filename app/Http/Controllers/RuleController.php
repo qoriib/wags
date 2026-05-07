@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use App\Models\Parameter;
 use App\Models\Rule;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,11 @@ class RuleController extends Controller
      */
     public function index()
     {
-        $rules = Rule::with('material')->get();
+        $rules = Rule::with(['material', 'parameter'])->get();
         $materials = Material::all();
-        
-        return view('settings.index', compact('rules', 'materials'));
+        $parameters = Parameter::all();
+
+        return view('settings.index', compact('rules', 'materials', 'parameters'));
     }
 
     /**
@@ -26,6 +28,7 @@ class RuleController extends Controller
     {
         $request->validate([
             'material_id' => 'required|exists:materials,id',
+            'parameter_id' => 'required|exists:parameters,id',
             'operator' => 'required|in:<,>,<=,>=',
             'value' => 'required|numeric',
         ]);
@@ -42,6 +45,7 @@ class RuleController extends Controller
     {
         $request->validate([
             'material_id' => 'required|exists:materials,id',
+            'parameter_id' => 'required|exists:parameters,id',
             'operator' => 'required|in:<,>,<=,>=',
             'value' => 'required|numeric',
         ]);

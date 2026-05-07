@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
-use App\Models\Sample;
+use App\Models\Parameter;
 use App\Models\Rule;
-use Illuminate\Http\Request;
+use App\Models\Sample;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class SampleController extends Controller
 {
@@ -15,7 +16,7 @@ class SampleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Sample::with('material');
+        $query = Sample::with(['material', 'details.parameter']);
 
         if ($request->filled('material_id')) {
             $query->where('material_id', $request->material_id);
@@ -27,13 +28,14 @@ class SampleController extends Controller
 
         if ($request->filled('month')) {
             $query->whereMonth('test_date', Carbon::parse($request->month)->month)
-                  ->whereYear('test_date', Carbon::parse($request->month)->year);
+                ->whereYear('test_date', Carbon::parse($request->month)->year);
         }
 
         $samples = $query->latest()->get();
         $materials = Material::all();
+        $parameters = Parameter::all();
 
-        return view('samples.index', compact('samples', 'materials'));
+        return view('samples.index', compact('samples', 'materials', 'parameters'));
     }
 
     /**
@@ -41,7 +43,9 @@ class SampleController extends Controller
      */
     public function create(Material $material)
     {
-        return view('samples.create', compact('material'));
+        $parameters = Parameter::all();
+
+        return view('samples.create', compact('material', 'parameters'));
     }
 
     /**
@@ -49,24 +53,25 @@ class SampleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $parameterSlugs = Parameter::pluck('slug')->all();
+        $validation = [
             'material_id' => 'required|exists:materials,id',
             'sample_no' => 'required|unique:samples,sample_no',
             'test_date' => 'required|date',
             'operator' => 'required|string',
-            'fe2o3' => 'nullable|numeric',
-            'cao' => 'nullable|numeric',
-            'sio2' => 'nullable|numeric',
-            'al2o3' => 'nullable|numeric',
-            'caco3' => 'nullable|numeric',
-            'loi' => 'nullable|numeric',
-        ]);
+        ];
+
+        foreach ($parameterSlugs as $slug) {
+            $validation[$slug] = 'nullable|numeric';
+        }
+
+        $request->validate($validation);
 
         $material = Material::findOrFail($request->material_id);
-        $rules = Rule::where('material_id', $material->id)->get();
+        $rules = Rule::with('parameter')->where('material_id', $material->id)->get();
 
         // Prepare parameter values (convert percentages to 0-1 decimals)
-        $rawParams = ['fe2o3', 'cao', 'sio2', 'al2o3', 'caco3', 'loi'];
+        $rawParams = $parameterSlugs;
         $processedParams = [];
         foreach ($rawParams as $p) {
             if ($request->has($p) && $request->input($p) !== null) {
@@ -77,20 +82,26 @@ class SampleController extends Controller
         // Forward Chaining Logic
         $status = 'Layak Kirim';
         foreach ($rules as $rule) {
-            $paramKey = strtolower($material->chemical_formula);
-            $paramValue = $processedParams[$paramKey] ?? null;
-            
-            if ($paramValue === null) continue;
+            $paramKey = $rule->parameter?->slug;
+            $paramValue = $paramKey ? ($processedParams[$paramKey] ?? null) : null;
+
+            if ($paramValue === null) {
+                continue;
+            }
 
             $passed = false;
             switch ($rule->operator) {
-                case '<':  $passed = $paramValue < $rule->value; break;
-                case '>':  $passed = $paramValue > $rule->value; break;
-                case '<=': $passed = $paramValue <= $rule->value; break;
-                case '>=': $passed = $paramValue >= $rule->value; break;
+                case '<':  $passed = $paramValue < $rule->value;
+                    break;
+                case '>':  $passed = $paramValue > $rule->value;
+                    break;
+                case '<=': $passed = $paramValue <= $rule->value;
+                    break;
+                case '>=': $passed = $paramValue >= $rule->value;
+                    break;
             }
 
-            if (!$passed) {
+            if (! $passed) {
                 $status = 'Tidak Layak';
                 break;
             }
@@ -106,15 +117,16 @@ class SampleController extends Controller
         ]);
 
         // Save Sample Details
+        $parameterMap = Parameter::whereIn('slug', array_keys($processedParams))
+            ->get()
+            ->keyBy('slug');
+
         foreach ($processedParams as $param => $value) {
-            // Find the material record for this chemical compound
-            $paramMaterial = Material::where('slug', strtolower($param))
-                                    ->orWhere('name', $param)
-                                    ->first();
-            
-            if ($paramMaterial) {
+            $parameter = $parameterMap->get($param);
+
+            if ($parameter) {
                 $sample->details()->create([
-                    'material_id' => $paramMaterial->id,
+                    'parameter_id' => $parameter->id,
                     'value' => $value,
                 ]);
             }
@@ -129,7 +141,8 @@ class SampleController extends Controller
      */
     public function show(Sample $sample)
     {
-        $sample->load('material.rules');
+        $sample->load(['material.rules.parameter', 'details.parameter']);
+
         return view('samples.show', compact('sample'));
     }
 
@@ -138,7 +151,7 @@ class SampleController extends Controller
      */
     public function exportCsv(Request $request)
     {
-        $query = Sample::with(['material', 'details.material']);
+        $query = Sample::with(['material', 'details.parameter']);
 
         if ($request->filled('material_id')) {
             $query->where('material_id', $request->material_id);
@@ -148,40 +161,48 @@ class SampleController extends Controller
         }
         if ($request->filled('month')) {
             $query->whereMonth('test_date', Carbon::parse($request->month)->month)
-                  ->whereYear('test_date', Carbon::parse($request->month)->year);
+                ->whereYear('test_date', Carbon::parse($request->month)->year);
         }
 
         $samples = $query->latest()->get();
-        
-        $filename = "Laporan_Uji_" . now()->format('Ymd_His') . ".csv";
+
+        $filename = 'Laporan_Uji_'.now()->format('Ymd_His').'.csv';
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$filename",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
-        $columns = ['No', 'Tanggal', 'Material', 'No. Sampel', 'Operator', 'Fe2O3', 'CaO', 'Status'];
+        $parameters = Parameter::all();
+        $columns = array_merge(
+            ['No', 'Tanggal', 'Material', 'No. Sampel', 'Operator'],
+            $parameters->pluck('name')->all(),
+            ['Status']
+        );
 
-        $callback = function() use($samples, $columns) {
+        $callback = function () use ($samples, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($samples as $index => $sample) {
-                $fe2o3Detail = $sample->details->where('material.slug', 'fe2o3')->first();
-                $caoDetail = $sample->details->where('material.slug', 'cao')->first();
-                
-                fputcsv($file, [
+                $row = [
                     $index + 1,
                     $sample->test_date,
                     $sample->material->name,
                     $sample->sample_no,
                     $sample->operator,
-                    $fe2o3Detail ? ($fe2o3Detail->value * 100) . '%' : '-',
-                    $caoDetail ? ($caoDetail->value * 100) . '%' : '-',
-                    $sample->status,
-                ]);
+                ];
+
+                foreach ($parameters as $parameter) {
+                    $detail = $sample->details->where('parameter.slug', $parameter->slug)->first();
+                    $row[] = $detail ? ($detail->value * 100).'%' : '-';
+                }
+
+                $row[] = $sample->status;
+
+                fputcsv($file, $row);
             }
 
             fclose($file);
