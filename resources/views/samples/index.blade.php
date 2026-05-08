@@ -5,12 +5,19 @@
 @section('header_subtitle', 'Daftar keseluruhan data hasil klasifikasi laboratorium')
 
 @section('content')
-<div class="card border-0 shadow-sm mb-4">
+<div class="card shadow-sm mb-4">
     <div class="card-body p-4">
+        <div class="d-flex align-items-center gap-2 mb-4">
+            <i data-lucide="filter" class="text-primary"></i>
+            <h5 class="fw-bold mb-0">Filter Laporan</h5>
+        </div>
         <form action="{{ route('samples.index') }}" method="GET" id="filter-form">
             <div class="row g-3 align-items-end">
                 <div class="col-md-4">
-                    <label class="form-label text-muted fw-semibold small mb-2">Jenis Material</label>
+                    <label class="form-label text-muted fw-semibold small mb-2">
+                        <i data-lucide="package" class="me-1"></i>
+                        Jenis Material
+                    </label>
                     <select name="material_id" class="form-select" onchange="this.form.submit()">
                         <option value="">Semua Material</option>
                         @foreach($materials as $material)
@@ -20,7 +27,10 @@
                 </div>
                 
                 <div class="col-md-3">
-                    <label class="form-label text-muted fw-semibold small mb-2">Status</label>
+                    <label class="form-label text-muted fw-semibold small mb-2">
+                        <i data-lucide="info" class="me-1"></i>
+                        Status
+                    </label>
                     <select name="status" class="form-select" onchange="this.form.submit()">
                         <option value="">Semua Status</option>
                         <option value="Layak Kirim" {{ request('status') == 'Layak Kirim' ? 'selected' : '' }}>Layak Kirim</option>
@@ -29,29 +39,39 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted fw-semibold small mb-2">Bulan</label>
+                    <label class="form-label text-muted fw-semibold small mb-2">
+                        <i data-lucide="calendar" class="me-1"></i>
+                        Bulan
+                    </label>
                     <input type="month" name="month" class="form-control" value="{{ request('month') }}" onchange="this.form.submit()">
                 </div>
 
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-light w-100 py-2" onclick="window.location.href='{{ route('samples.index') }}'">Reset</button>
+                    <button type="button" class="btn btn-light w-100 py-2 border fw-semibold" onclick="window.location.href='{{ route('samples.index') }}'">
+                        <i data-lucide="rotate-ccw" class="me-2"></i>
+                        Reset
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm">
+<div class="card shadow-sm">
     <div class="card-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="section-title mb-0">REKAPITULASI HASIL UJI</h3>
-            <a href="{{ route('samples.export', request()->all()) }}" class="btn btn-outline-success">
+            <div class="d-flex align-items-center gap-2">
+                <i data-lucide="list" class="text-primary"></i>
+                <h3 class="section-title mb-0">REKAPITULASI HASIL UJI</h3>
+            </div>
+            <a href="{{ route('samples.export', request()->all()) }}" class="btn btn-outline-success fw-bold px-4">
+                <i data-lucide="download" class="me-2"></i>
                 <span>Export CSV</span>
             </a>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
             <thead>
                 <tr>
                     <th class="ps-4 text-nowrap">No</th>
@@ -86,7 +106,8 @@
                         </span>
                     </td>
                     <td class="text-end pe-4 text-nowrap">
-                        <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-dark">
+                        <a href="{{ route('samples.show', $sample->id) }}" class="btn btn-sm btn-outline-primary rounded-3 fw-semibold">
+                            <i data-lucide="external-link" class="me-1"></i>
                             Detail
                         </a>
                     </td>

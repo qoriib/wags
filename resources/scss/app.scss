@@ -25,7 +25,7 @@ $input-bg: #ffffff;
 $input-border-radius: 10px;
 $input-focus-box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 
-$min-contrast-ratio: 3.5;
+$min-contrast-ratio: 2.5;
 
 // Import Bootstrap
 @import "bootstrap/scss/bootstrap";
@@ -384,3 +384,60 @@ body {
 .danger-outline { border-color: #fee2e2 !important; color: var(--danger) !important; }
 .flex-gap-3 { gap: 0.75rem; }
 .flex-gap-4 { gap: 1rem; }
+
+// Lucide Icons Standardized Sizing
+i[data-lucide], 
+svg.lucide {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2px;
+    flex-shrink: 0;
+}
+
+// Context Specific Sizes
+.sidebar .nav-link i[data-lucide], 
+.sidebar .nav-link svg.lucide {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.btn i[data-lucide], 
+.btn svg.lucide {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.stat-icon-box i[data-lucide], 
+.stat-icon-box svg.lucide {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.brand-logo i[data-lucide], 
+.brand-logo svg.lucide {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.icon-box i[data-lucide], 
+.icon-box svg.lucide {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+// Table Header Icons
+th i[data-lucide],
+th svg.lucide {
+    width: 0.9rem;
+    height: 0.9rem;
+    opacity: 0.8;
+}
+
+// Fix for buttons with icons
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}

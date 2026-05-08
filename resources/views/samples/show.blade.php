@@ -11,23 +11,18 @@
     </div>
     <div class="col-auto">
         <a href="{{ route('samples.index') }}" class="btn btn-light border shadow-sm px-4">
-            <i data-lucide="arrow-left" class="w-4 h-4 me-2"></i>
+            <i data-lucide="arrow-left" class="me-2"></i>
             <span>Kembali ke Laporan</span>
         </a>
     </div>
 </div>
 
 <!-- Status Overview -->
-<div class="card border-0 shadow-sm mb-4">
+<div class="card shadow-sm mb-4">
     <div class="card-body p-4">
         <div class="row align-items-center g-4">
             <div class="col-md-7 border-end">
                 <div class="d-flex align-items-center gap-4 mb-3">
-                    <div class="flex-shrink-0">
-                        <div class="bg-{{ $sample->status == 'Layak Kirim' ? 'success' : 'danger' }}-subtle text-{{ $sample->status == 'Layak Kirim' ? 'success' : 'danger' }} rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-                            <i data-lucide="{{ $sample->status == 'Layak Kirim' ? 'check-circle' : 'x-circle' }}" class="w-8 h-8"></i>
-                        </div>
-                    </div>
                     <div>
                         <h4 class="fw-bold mb-1">{{ $sample->material->name }}</h4>
                         <code class="text-primary fw-medium">{{ $sample->sample_no }}</code>
@@ -35,7 +30,7 @@
                 </div>
                 <div class="alert {{ $sample->status == 'Layak Kirim' ? 'alert-success' : 'alert-danger' }} border-0 mb-0 py-3 px-4">
                     <div class="d-flex align-items-center gap-2 mb-1">
-                        <i data-lucide="info" class="w-4 h-4"></i>
+                        <i data-lucide="info"></i>
                         <span class="fw-bold text-uppercase small">Kesimpulan Klasifikasi</span>
                     </div>
                     <p class="mb-0 small opacity-75">
@@ -73,11 +68,11 @@
 <div class="row g-4">
     <!-- Parameter Details -->
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card shadow-sm h-100">
             <div class="card-body p-4">
                 <h3 class="section-title mb-4">HASIL PARAMETER LABORATORIUM</h3>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0 text-nowrap">
                         <thead class="bg-light-subtle">
                             <tr>
                                 <th class="ps-4">Parameter Kimia</th>
@@ -138,10 +133,10 @@
 
     <!-- System Chaining Log -->
     <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100 bg-light-subtle">
+        <div class="card shadow-sm h-100 bg-light-subtle">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-4">
-                    <i data-lucide="cpu" class="text-primary w-5 h-5"></i>
+                    <i data-lucide="cpu" class="text-primary"></i>
                     <h3 class="section-title mb-0">FORWARD CHAINING LOG</h3>
                 </div>
                 
@@ -173,7 +168,7 @@
 
                 <div class="mt-4 p-3 bg-white border rounded-3 small">
                     <div class="d-flex align-items-start gap-3">
-                        <i data-lucide="shield-check" class="text-success w-5 h-5 flex-shrink-0"></i>
+                        <i data-lucide="shield-check" class="text-success flex-shrink-0"></i>
                         <div>
                             <p class="fw-bold mb-1">Verifikasi Sistem</p>
                             <p class="text-muted mb-0">Logika klasifikasi dijalankan secara otomatis berdasarkan basis pengetahuan PT WAGS.</p>

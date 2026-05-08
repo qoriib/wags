@@ -10,13 +10,16 @@
     <div class="row g-4 mb-4">
         <!-- Informasi Sampel -->
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-body p-4">
-                    <h3 class="section-title mb-4">Informasi Sampel</h3>
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <i data-lucide="file-text" class="text-primary"></i>
+                        <h3 class="section-title mb-0">Informasi Sampel</h3>
+                    </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">Jenis Material</label>
-                        <select name="material_id" class="form-select" required>
+                        <label class="form-label fw-semibold">Jenis Material</label>
+                        <select name="material_id" class="form-select border-2" required>
                             <option value="">Pilih Material</option>
                             @foreach($materials as $material)
                                 <option value="{{ $material->id }}" {{ old('material_id', $selectedMaterial?->id) == $material->id ? 'selected' : '' }}>
@@ -30,21 +33,36 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">No. Sampel *</label>
-                        <input type="text" name="sample_no" class="form-control" placeholder="Contoh: LAB-2026-001" required value="{{ old('sample_no', $defaultSampleNo) }}">
+                        <label class="form-label fw-semibold">No. Sampel *</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-2 border-end-0">
+                                <i data-lucide="hash" class="text-muted"></i>
+                            </span>
+                            <input type="text" name="sample_no" class="form-control border-2" placeholder="Contoh: LAB-2026-001" required value="{{ old('sample_no', $defaultSampleNo) }}">
+                        </div>
                         @error('sample_no') 
                             <div class="text-danger small mt-1 fw-medium">{{ $message }}</div> 
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Tanggal Uji *</label>
-                        <input type="date" name="test_date" class="form-control" required value="{{ old('test_date', date('Y-m-d')) }}">
+                        <label class="form-label fw-semibold">Tanggal Uji *</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-2 border-end-0">
+                                <i data-lucide="calendar" class="text-muted"></i>
+                            </span>
+                            <input type="date" name="test_date" class="form-control border-2" required value="{{ old('test_date', date('Y-m-d')) }}">
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Operator *</label>
-                        <input type="text" name="operator" class="form-control" placeholder="Nama petugas lab" required value="{{ old('operator', $defaultOperator) }}">
+                        <label class="form-label fw-semibold">Operator *</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-2 border-end-0">
+                                <i data-lucide="user" class="text-muted"></i>
+                            </span>
+                            <input type="text" name="operator" class="form-control border-2" placeholder="Nama petugas lab" required value="{{ old('operator', $defaultOperator) }}">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,19 +70,25 @@
 
         <!-- Parameter Hasil Uji -->
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="card shadow-sm h-100">
                 <div class="card-body p-4">
-                    <h3 class="section-title mb-3">Parameter Hasil Uji</h3>
-                    <p class="text-muted small mb-4">Isi parameter sesuai hasil uji laboratorium (Standar SNI 0449:2010)</p>
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <i data-lucide="beaker" class="text-primary"></i>
+                        <h3 class="section-title mb-0">Parameter Hasil Uji</h3>
+                    </div>
+                    <p class="text-muted small mb-4 bg-light p-2 rounded border">
+                        <i data-lucide="info" class="me-1"></i>
+                        Isi parameter sesuai hasil uji laboratorium (Standar PT WAGS)
+                    </p>
 
                     <div class="row g-3">
                         @foreach($parameters as $parameter)
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="form-label text-muted small fw-semibold">{{ $parameter->name }} (%)</label>
-                                <div class="input-group">
-                                    <input type="number" step="0.0001" min="0" max="100" name="{{ $parameter->slug }}" class="form-control" placeholder="0.0000" value="{{ old($parameter->slug) }}">
-                                    <span class="input-group-text bg-light text-muted small">%</span>
+                                <label class="form-label text-muted small fw-bold text-uppercase">{{ $parameter->name }} (%)</label>
+                                <div class="input-group shadow-sm-hover">
+                                    <input type="number" step="0.0001" min="0" max="100" name="{{ $parameter->slug }}" class="form-control border-2" placeholder="0.00" value="{{ old($parameter->slug) }}">
+                                    <span class="input-group-text bg-white text-muted fw-bold border-2 border-start-0">%</span>
                                 </div>
                             </div>
                         </div>
@@ -76,10 +100,13 @@
     </div>
 
     <div class="d-flex gap-3 justify-content-end">
-        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary px-4 py-2">Batal</a>
-        <button type="submit" class="btn btn-primary px-5 py-2">
+        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i data-lucide="x" class="me-2"></i>
+            Batal
+        </a>
+        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">
             <span class="me-2">Proses Klasifikasi</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <i data-lucide="zap"></i>
         </button>
     </div>
 </form>
