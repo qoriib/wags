@@ -13,17 +13,16 @@ class MaterialSeeder extends Seeder
     public function run(): void
     {
         $materials = [
-            ['name' => 'Kaolin', 'slug' => 'kaolin', 'formula' => 'Fe2O3'],
-            ['name' => 'Clay F1', 'slug' => 'clay-f1', 'formula' => 'CaO'],
-            ['name' => 'Feldspar', 'slug' => 'feldspar', 'formula' => 'SiO2'],
-            ['name' => 'Limestone', 'slug' => 'limestone', 'formula' => 'CaCo3'],
-            ['name' => 'Clay Pasiran', 'slug' => 'clay-pasiran', 'formula' => 'SiO3'],
+            ['name' => 'Kaolin', 'slug' => 'kaolin', 'formula' => 'Al2Si2O5(OH)4'],
+            ['name' => 'Clay', 'slug' => 'clay', 'formula' => 'Al2O3.2SiO2.2H2O'],
+            ['name' => 'Feldspar', 'slug' => 'feldspar', 'formula' => 'KAlSi3O8'],
+            ['name' => 'Pasir Silika', 'slug' => 'pasir-silika', 'formula' => 'SiO2'],
         ];
 
         foreach ($materials as $data) {
-            Material::firstOrCreate(
+            Material::updateOrCreate(
+                ['slug' => $data['slug']],
                 [
-                    'slug' => $data['slug'],
                     'name' => $data['name'],
                     'formula' => $data['formula'],
                 ]

@@ -13,16 +13,13 @@ class ParameterSeeder extends Seeder
     public function run(): void
     {
         $parameters = [
-            ['name' => 'FeO', 'slug' => 'feo'],
+            ['name' => 'Fe₂O₃', 'slug' => 'fe2o3'],
             ['name' => 'CaO', 'slug' => 'cao'],
-            ['name' => 'SiO', 'slug' => 'sio'],
-            ['name' => 'AiO', 'slug' => 'aio'],
-            ['name' => 'CaCO', 'slug' => 'caco'],
-            ['name' => 'Lol', 'slug' => 'lol'],
+            ['name' => 'SiO₂', 'slug' => 'sio2'],
         ];
 
         foreach ($parameters as $parameter) {
-            Parameter::firstOrCreate(
+            Parameter::updateOrCreate(
                 ['slug' => $parameter['slug']],
                 ['name' => $parameter['name']]
             );

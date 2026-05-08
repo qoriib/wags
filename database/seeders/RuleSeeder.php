@@ -15,52 +15,41 @@ class RuleSeeder extends Seeder
     public function run(): void
     {
         $kaolin = Material::where('slug', 'kaolin')->first();
-        $clayF1 = Material::where('slug', 'clay-f1')->first();
+        $clay = Material::where('slug', 'clay')->first();
         $feldspar = Material::where('slug', 'feldspar')->first();
-        $limestone = Material::where('slug', 'limestone')->first();
-        $clayPasiran = Material::where('slug', 'clay-pasiran')->first();
+        $pasirSilika = Material::where('slug', 'pasir-silika')->first();
 
         $parameterMap = Parameter::pluck('id', 'slug');
 
         $rules = [
-            [
-                'material_id' => $kaolin->id,
-                'parameter_id' => $parameterMap['feo'] ?? null,
-                'operator' => '<',
-                'value' => 0.005, // 0.5%
-            ],
-            [
-                'material_id' => $clayF1->id,
-                'parameter_id' => $parameterMap['cao'] ?? null,
-                'operator' => '>',
-                'value' => 0.03, // 3%
-            ],
-            [
-                'material_id' => $feldspar->id,
-                'parameter_id' => $parameterMap['feo'] ?? null,
-                'operator' => '<',
-                'value' => 0.003, // 0.3%
-            ],
-            [
-                'material_id' => $limestone->id,
-                'parameter_id' => $parameterMap['caco'] ?? null,
-                'operator' => '>',
-                'value' => 0.9, // 90%
-            ],
-            [
-                'material_id' => $clayPasiran->id,
-                'parameter_id' => $parameterMap['sio'] ?? null,
-                'operator' => '>',
-                'value' => 0.8, // 80%
-            ],
+            // Kaolin Rules
+            ['material_id' => $kaolin->id, 'parameter_id' => $parameterMap['fe2o3'], 'operator' => '<', 'value' => 1.0],
+            ['material_id' => $kaolin->id, 'parameter_id' => $parameterMap['cao'], 'operator' => '<', 'value' => 0.5],
+            
+            // Clay Rules
+            ['material_id' => $clay->id, 'parameter_id' => $parameterMap['fe2o3'], 'operator' => '<', 'value' => 2.0],
+            ['material_id' => $clay->id, 'parameter_id' => $parameterMap['cao'], 'operator' => '<', 'value' => 1.5],
+            
+            // Feldspar Rules
+            ['material_id' => $feldspar->id, 'parameter_id' => $parameterMap['fe2o3'], 'operator' => '<', 'value' => 0.3],
+            ['material_id' => $feldspar->id, 'parameter_id' => $parameterMap['sio2'], 'operator' => '>', 'value' => 60.0],
+            
+            // Pasir Silika Rules
+            ['material_id' => $pasirSilika->id, 'parameter_id' => $parameterMap['sio2'], 'operator' => '>', 'value' => 95.0],
+            ['material_id' => $pasirSilika->id, 'parameter_id' => $parameterMap['fe2o3'], 'operator' => '<', 'value' => 0.1],
         ];
 
         foreach ($rules as $rule) {
-            if (! $rule['parameter_id']) {
-                continue;
-            }
-
-            Rule::create($rule);
+            Rule::updateOrCreate(
+                [
+                    'material_id' => $rule['material_id'],
+                    'parameter_id' => $rule['parameter_id'],
+                ],
+                [
+                    'operator' => $rule['operator'],
+                    'value' => $rule['value'],
+                ]
+            );
         }
     }
 }
